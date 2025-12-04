@@ -1,8 +1,8 @@
-import { describe, it, expect } from 'vitest';
-import { Game } from './game';
-import { LevelConfig } from './level';
-import { TileType } from './types';
+import { describe, expect, it } from 'vitest';
 import { TILE_SIZE } from './constants';
+import { Game } from './game';
+import type { LevelConfig } from './level';
+import { TileType } from './types';
 
 const mockLevel: LevelConfig = {
     id: 'test-level',
@@ -14,13 +14,13 @@ const mockLevel: LevelConfig = {
             if (y === 9) return TileType.Ground;
             if (y === 8 && x === 5) return TileType.Goal;
             return TileType.Empty;
-        })
+        }),
     ),
     villagerSpawn: { position: { x: 0, y: 8 }, interval: 1000, count: 1 },
     zombieSpawns: [],
     goal: { position: { x: 5, y: 8 }, requiredCount: 1 },
     maxBlocks: 10,
-    forbiddenTiles: []
+    forbiddenTiles: [],
 };
 
 describe('Game Physics & Goal', () => {

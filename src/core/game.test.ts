@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { Game } from './game';
-import { LevelConfig } from './level';
+import type { LevelConfig } from './level';
 import { TileType } from './types';
 
 const mockLevel: LevelConfig = {
@@ -13,7 +13,7 @@ const mockLevel: LevelConfig = {
     zombieSpawns: [],
     goal: { position: { x: 9, y: 9 }, requiredCount: 1 },
     maxBlocks: 10,
-    forbiddenTiles: []
+    forbiddenTiles: [],
 };
 
 describe('Game', () => {

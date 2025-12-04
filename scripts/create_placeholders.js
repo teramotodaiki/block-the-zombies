@@ -1,6 +1,6 @@
-import sharp from 'sharp';
 import fs from 'fs';
 import path from 'path';
+import sharp from 'sharp';
 
 const OUTPUT_DIR = 'public/assets/game';
 
@@ -15,7 +15,7 @@ async function createPlaceholders() {
         { name: 'btn_next.png', width: 80, height: 80, color: { r: 100, g: 100, b: 100, alpha: 1 } },
         { name: 'btn_pause.png', width: 48, height: 48, color: { r: 200, g: 200, b: 200, alpha: 1 } },
         { name: 'icon_lock.png', width: 64, height: 64, color: { r: 50, g: 50, b: 50, alpha: 1 } },
-        { name: 'icon_unlock.png', width: 64, height: 64, color: { r: 50, g: 200, b: 50, alpha: 1 } }
+        { name: 'icon_unlock.png', width: 64, height: 64, color: { r: 50, g: 200, b: 50, alpha: 1 } },
     ];
 
     for (const asset of assets) {
@@ -30,8 +30,8 @@ async function createPlaceholders() {
                 width: asset.width,
                 height: asset.height,
                 channels: 4,
-                background: asset.color
-            }
+                background: asset.color,
+            },
         })
             .png()
             .toFile(filePath);

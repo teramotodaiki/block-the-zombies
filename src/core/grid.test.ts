@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
+import { TILE_SIZE } from './constants';
 import { Grid } from './grid';
 import { TileType } from './types';
-import { TILE_SIZE } from './constants';
 
 describe('Grid', () => {
     it('should initialize with empty tiles', () => {

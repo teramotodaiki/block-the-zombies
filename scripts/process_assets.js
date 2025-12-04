@@ -1,6 +1,6 @@
-import sharp from 'sharp';
 import fs from 'fs';
 import path from 'path';
+import sharp from 'sharp';
 
 const WORKBENCH_DIR = 'workbench';
 const OUTPUT_DIR = 'public/assets/game';
@@ -52,7 +52,7 @@ async function processAssets() {
                     width: targetSize.width,
                     height: targetSize.height,
                     fit: 'contain',
-                    background: { r: 0, g: 0, b: 0, alpha: 0 }
+                    background: { r: 0, g: 0, b: 0, alpha: 0 },
                 });
             } else if (file === 'title_logo.png') {
                 // Special handling for title: limit width to 600

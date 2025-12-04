@@ -1,6 +1,6 @@
 import sharp from 'sharp';
 
-const files = ['workbench/unknown_1.png', 'workbench/unknown_2.jpeg'];
+const files = ['public/assets/game/title_logo.png'];
 
 async function inspect() {
     for (const file of files) {
@@ -8,7 +8,6 @@ async function inspect() {
             const metadata = await sharp(file).metadata();
             console.log(`File: ${file}`);
             console.log(`Dimensions: ${metadata.width}x${metadata.height}`);
-            console.log(`Format: ${metadata.format}`);
         } catch (err) {
             console.log(`Error reading ${file}: ${err.message}`);
         }

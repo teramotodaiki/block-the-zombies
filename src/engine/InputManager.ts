@@ -1,5 +1,5 @@
-import Phaser from 'phaser';
-import { Game } from '../core/game';
+import type Phaser from 'phaser';
+import type { Game } from '../core/game';
 
 export class InputManager {
     private scene: Phaser.Scene;

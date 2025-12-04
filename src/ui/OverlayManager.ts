@@ -22,13 +22,15 @@ export class OverlayManager extends Phaser.GameObjects.Container {
         this.add(this.overlay);
 
         // Message Text
-        this.messageText = this.scene.add.text(400, 200, '', {
-            fontFamily: '"VT323", monospace',
-            fontSize: '64px',
-            color: '#ffffff',
-            stroke: '#000000',
-            strokeThickness: 6
-        }).setOrigin(0.5);
+        this.messageText = this.scene.add
+            .text(400, 200, '', {
+                fontFamily: '"VT323", monospace',
+                fontSize: '64px',
+                color: '#ffffff',
+                stroke: '#000000',
+                strokeThickness: 6,
+            })
+            .setOrigin(0.5);
         this.add(this.messageText);
     }
 
@@ -52,7 +54,7 @@ export class OverlayManager extends Phaser.GameObjects.Container {
         this.messageText.setColor('#44ff44');
 
         // Next Level Button (Center)
-        this.createButton(400, 350, 'btn-next', 0x4CAF50, onNext);
+        this.createButton(400, 350, 'btn-next', 0x4caf50, onNext);
 
         // Retry Button
         this.createButton(250, 450, 'btn-retry', 0xffffff, onRetry);
@@ -101,7 +103,7 @@ export class OverlayManager extends Phaser.GameObjects.Container {
     }
 
     private reset() {
-        this.buttons.forEach(btn => btn.destroy());
+        this.buttons.forEach((btn) => btn.destroy());
         this.buttons = [];
     }
 
@@ -111,7 +113,7 @@ export class OverlayManager extends Phaser.GameObjects.Container {
         this.scene.tweens.add({
             targets: this,
             alpha: 1,
-            duration: 300
+            duration: 300,
         });
     }
 

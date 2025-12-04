@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { Game } from '../core/game';
+import type { Game } from '../core/game';
 
 export class HUD extends Phaser.GameObjects.Container {
     private gameCore: Game;
@@ -39,7 +39,7 @@ export class HUD extends Phaser.GameObjects.Container {
             this.scene.scene.start('TitleScene');
         });
 
-        this.restartBtn = this.createButton(100, 30, 'btn-retry', () => { });
+        this.restartBtn = this.createButton(100, 30, 'btn-retry', () => {});
         this.setupLongPress(this.restartBtn, () => {
             console.log('Restart Long Press');
             this.scene.scene.restart();
@@ -58,11 +58,13 @@ export class HUD extends Phaser.GameObjects.Container {
 
         // Block Count
         this.scene.add.text(700, 30, '🧱', { fontSize: '24px' }).setOrigin(0.5, 0.5);
-        this.blockCountText = this.scene.add.text(730, 30, '0', {
-            fontFamily: '"VT323", monospace',
-            fontSize: '32px',
-            color: '#ffffff'
-        }).setOrigin(0.5, 0.5);
+        this.blockCountText = this.scene.add
+            .text(730, 30, '0', {
+                fontFamily: '"VT323", monospace',
+                fontSize: '32px',
+                color: '#ffffff',
+            })
+            .setOrigin(0.5, 0.5);
         this.add(this.blockCountText);
     }
 
@@ -147,7 +149,7 @@ export class HUD extends Phaser.GameObjects.Container {
 
         // Init icons if needed
         if (this.goalIcons.length !== required) {
-            this.goalIcons.forEach(icon => icon.destroy());
+            this.goalIcons.forEach((icon) => icon.destroy());
             this.goalIcons = [];
             for (let i = 0; i < required; i++) {
                 const icon = this.scene.add.rectangle(600 + i * 30, 30, 20, 20, 0x555555);

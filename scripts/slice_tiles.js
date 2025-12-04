@@ -1,6 +1,6 @@
-import sharp from 'sharp';
 import fs from 'fs';
 import path from 'path';
+import sharp from 'sharp';
 
 const INPUT_FILE = 'workbench/tiles_source.png';
 const OUTPUT_DIR = 'workbench/sliced';
@@ -29,10 +29,7 @@ async function slice() {
             const top = y * TILE_SIZE;
             const outputFile = path.join(OUTPUT_DIR, `tile_${y}_${x}.png`);
 
-            await image
-                .clone()
-                .extract({ left, top, width: TILE_SIZE, height: TILE_SIZE })
-                .toFile(outputFile);
+            await image.clone().extract({ left, top, width: TILE_SIZE, height: TILE_SIZE }).toFile(outputFile);
 
             count++;
         }

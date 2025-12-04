@@ -1,6 +1,6 @@
-import { Vector2, Direction } from './types';
-import { GRAVITY, MOVE_SPEED, MAX_FALL_SPEED, TILE_SIZE } from './constants';
-import { Grid } from './grid';
+import { GRAVITY, MAX_FALL_SPEED, MOVE_SPEED, TILE_SIZE } from './constants';
+import type { Grid } from './grid';
+import { Direction, type Vector2 } from './types';
 
 export abstract class Entity {
     position: Vector2;
@@ -30,25 +30,53 @@ export abstract class Entity {
 
     protected moveX(delta: number, grid: Grid) {
         const nextX = this.position.x + this.velocity.x * delta;
-        // Simple collision detection (treat entity as a single point at bottom center for simplicity first, or box)
-        // For this game, tile-based collision is usually sufficient.
-        // Let's check the tile at the bottom-center of the entity.
+        const topY = this.position.y - this.height; // Top is y - height (since y is bottom center? No, y is center? Let's check constructor)
+        // Constructor: this.position = { x, y };
+        // moveY logic: this.position.y = tileY * TILE_SIZE - this.height / 2;
+        // This implies position.y is the CENTER of the entity.
+        // So Top = y - height / 2.
+        // Bottom = y + height / 2.
+
+        const topEdge = this.position.y - this.height / 2;
+        const bottomEdge = this.position.y + this.height / 2 - 0.1; // Epsilon to avoid checking tile below when standing exactly on it
 
         // Check horizontal collision
-        // If moving right
         if (this.velocity.x > 0) {
             const rightEdge = nextX + this.width / 2;
             const tileX = Math.floor(rightEdge / TILE_SIZE);
-            const tileY = Math.floor((this.position.y - 1) / TILE_SIZE); // Check slightly above bottom
-            if (grid.isSolid(tileX, tileY)) {
-                this.velocity.x *= -1; // Bounce/Turn
+
+            // Check all vertical tiles occupied by the entity
+            const startTileY = Math.floor(topEdge / TILE_SIZE);
+            const endTileY = Math.floor(bottomEdge / TILE_SIZE);
+
+            let collision = false;
+            for (let ty = startTileY; ty <= endTileY; ty++) {
+                if (grid.isSolid(tileX, ty)) {
+                    collision = true;
+                    break;
+                }
+            }
+
+            if (collision) {
+                this.velocity.x *= -1;
                 return;
             }
         } else if (this.velocity.x < 0) {
             const leftEdge = nextX - this.width / 2;
             const tileX = Math.floor(leftEdge / TILE_SIZE);
-            const tileY = Math.floor((this.position.y - 1) / TILE_SIZE);
-            if (grid.isSolid(tileX, tileY)) {
+
+            const startTileY = Math.floor(topEdge / TILE_SIZE);
+            const endTileY = Math.floor(bottomEdge / TILE_SIZE);
+
+            let collision = false;
+            for (let ty = startTileY; ty <= endTileY; ty++) {
+                if (grid.isSolid(tileX, ty)) {
+                    collision = true;
+                    break;
+                }
+            }
+
+            if (collision) {
                 this.velocity.x *= -1;
                 return;
             }
@@ -62,12 +90,25 @@ export abstract class Entity {
 
         // Check downward collision (landing)
         if (this.velocity.y > 0) {
-            const bottomEdge = nextY + this.height / 2; // Bottom relative to center
-            const tileX = Math.floor(this.position.x / TILE_SIZE);
+            const bottomEdge = nextY + this.height / 2;
             const tileY = Math.floor(bottomEdge / TILE_SIZE);
 
+            const leftEdge = this.position.x - this.width / 2;
+            const rightEdge = this.position.x + this.width / 2;
+
+            const startTileX = Math.floor(leftEdge / TILE_SIZE);
+            const endTileX = Math.floor(rightEdge / TILE_SIZE);
+
+            let collision = false;
+            for (let tx = startTileX; tx <= endTileX; tx++) {
+                if (grid.isSolid(tx, tileY)) {
+                    collision = true;
+                    break;
+                }
+            }
+
             // Check if we entered a solid tile
-            if (grid.isSolid(tileX, tileY)) {
+            if (collision) {
                 // Landed
                 // Snap so bottom edge is at top of tile
                 this.position.y = tileY * TILE_SIZE - this.height / 2;

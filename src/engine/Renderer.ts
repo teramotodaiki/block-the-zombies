@@ -1,8 +1,7 @@
-import Phaser from 'phaser';
-import { Game } from '../core/game';
-import { TileType } from '../core/types';
+import type Phaser from 'phaser';
 import { TILE_SIZE } from '../core/constants';
-
+import type { Game } from '../core/game';
+import { TileType } from '../core/types';
 
 export class Renderer {
     private scene: Phaser.Scene;
@@ -50,34 +49,30 @@ export class Renderer {
 
                     let texture = '';
                     switch (tile) {
-                        case TileType.Ground: texture = 'tile-ground'; break;
-                        case TileType.Bedrock: texture = 'tile-bedrock'; break;
-                        case TileType.Magma: texture = 'tile-magma'; break;
-                        case TileType.Goal: texture = 'tile-goal'; break;
+                        case TileType.Ground:
+                            texture = 'tile-ground';
+                            break;
+                        case TileType.Bedrock:
+                            texture = 'tile-bedrock';
+                            break;
+                        case TileType.Magma:
+                            texture = 'tile-magma';
+                            break;
+                        case TileType.Goal:
+                            texture = 'tile-goal';
+                            break;
                     }
 
                     if (texture) {
                         const sprite = this.scene.add.sprite(worldX, worldY, texture);
+
+                        // Scale tile to match TILE_SIZE (48px)
+                        // Assets are 64x64, so we scale them down.
+                        // Or we could use setDisplaySize(TILE_SIZE, TILE_SIZE)
+                        sprite.setDisplaySize(TILE_SIZE, TILE_SIZE);
+
                         if (tile === TileType.Goal) {
-                            // Goal is 2x2 (96x96), but tile logic is 48x48.
-                            // We should only render it once for the top-left tile of the goal area.
-                            // But our grid logic doesn't explicitly group them.
-                            // Hack: Render it for every goal tile but offset/scale?
-                            // Better: Render only if it's the top-left of a goal block?
-                            // Given TEST_LEVEL has goal at (14,8), (14,9), (15,8), (15,9).
-                            // If we render a 96x96 sprite at (14,8), it covers all 4.
-                            // So we should only render at (14,8).
-                            // How to detect? Check neighbors?
-                            // Or just render 48x48 slice?
-                            // The asset is 96x96.
-                            // Let's just scale it down to 48x48 for now to fit the tile?
-                            // Or render it centered on the 2x2 area?
-                            // Let's try scaling for now to avoid complexity, or just render it big and let it overlap?
-                            // If we render big at every tile, it will look messy.
-                            // Let's assume the Goal tile in the grid is just a marker.
-                            // We will render the Goal Object separately?
-                            // For now, let's just scale it to 48x48 so it looks like a small goal on each tile.
-                            sprite.setDisplaySize(48, 48);
+                            // Goal specific logic if needed
                         }
                         this.tileGroup.add(sprite);
                     }
@@ -123,7 +118,8 @@ export class Renderer {
             }
 
             sprite.x = villager.position.x;
-            sprite.y = villager.position.y - 16; // Offset for visual alignment (sprite is taller)
+            sprite.y = villager.position.y + 4;
+            sprite.setScale(1.0);
             sprite.flipX = villager.direction === -1;
         }
 
@@ -140,7 +136,8 @@ export class Renderer {
             }
 
             sprite.x = zombie.position.x;
-            sprite.y = zombie.position.y - 16; // Offset for visual alignment
+            sprite.y = zombie.position.y - 60 + TILE_SIZE;
+            sprite.setScale(1.0);
             sprite.flipX = zombie.direction === -1;
         }
 

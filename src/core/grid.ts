@@ -1,5 +1,5 @@
-import { TileType, Vector2 } from './types';
 import { TILE_SIZE } from './constants';
+import { TileType, type Vector2 } from './types';
 
 export class Grid {
     private tiles: TileType[][];
@@ -36,7 +36,7 @@ export class Grid {
     toGrid(worldX: number, worldY: number): Vector2 {
         return {
             x: Math.floor(worldX / TILE_SIZE),
-            y: Math.floor(worldY / TILE_SIZE)
+            y: Math.floor(worldY / TILE_SIZE),
         };
     }
 }

@@ -12,7 +12,7 @@ export class LevelSelectScene extends Phaser.Scene {
         const titleText = this.add.text(this.cameras.main.centerX, 50, 'SELECT LEVEL', {
             fontFamily: '"VT323", monospace',
             fontSize: '48px',
-            color: '#ffffff'
+            color: '#ffffff',
         });
         titleText.setOrigin(0.5);
 
@@ -36,10 +36,10 @@ export class LevelSelectScene extends Phaser.Scene {
         window.gameDebug = {
             startLevel: () => this.scene.start('GameScene'),
             goToTitle: () => this.scene.start('TitleScene'),
-            restartLevel: () => { },
-            forceGameOver: () => { },
-            forceLevelClear: () => { },
-            getCurrentScene: () => 'LevelSelectScene'
+            restartLevel: () => {},
+            forceGameOver: () => {},
+            forceLevelClear: () => {},
+            getCurrentScene: () => 'LevelSelectScene',
         };
     }
 
@@ -55,7 +55,7 @@ export class LevelSelectScene extends Phaser.Scene {
             const text = this.add.text(x, y + 40, label, {
                 fontFamily: '"VT323", monospace',
                 fontSize: '32px',
-                color: '#ffffff'
+                color: '#ffffff',
             });
             text.setOrigin(0.5);
 
@@ -71,7 +71,7 @@ export class LevelSelectScene extends Phaser.Scene {
             const text = this.add.text(x, y + 40, label, {
                 fontFamily: '"VT323", monospace',
                 fontSize: '32px',
-                color: '#7f8c8d'
+                color: '#7f8c8d',
             });
             text.setOrigin(0.5);
         }

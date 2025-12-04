@@ -23,8 +23,8 @@ export class BootScene extends Phaser.Scene {
         this.load.image('tile-goal', 'assets/game/goal.png');
 
         // Entities
-        this.load.spritesheet('entity-villager', 'assets/game/villager.png', { frameWidth: 32, frameHeight: 96 });
-        this.load.spritesheet('entity-zombie', 'assets/game/zombie.png', { frameWidth: 32, frameHeight: 96 });
+        this.load.spritesheet('entity-villager', 'assets/game/villager.png', { frameWidth: 64, frameHeight: 192 });
+        this.load.spritesheet('entity-zombie', 'assets/game/zombie.png', { frameWidth: 64, frameHeight: 192 });
     }
 
     create() {
@@ -33,14 +33,14 @@ export class BootScene extends Phaser.Scene {
             key: 'villager-walk',
             frames: this.anims.generateFrameNumbers('entity-villager', { start: 0, end: 3 }),
             frameRate: 8,
-            repeat: -1
+            repeat: -1,
         });
 
         this.anims.create({
             key: 'zombie-walk',
             frames: this.anims.generateFrameNumbers('entity-zombie', { start: 0, end: 3 }),
             frameRate: 8,
-            repeat: -1
+            repeat: -1,
         });
 
         // Transition to Title

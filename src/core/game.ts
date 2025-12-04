@@ -1,8 +1,8 @@
-import { Grid } from './grid';
-import { Entity, Villager, Zombie } from './entity';
-import { LevelConfig } from './level';
-import { Vector2, TileType } from './types';
 import { TILE_SIZE } from './constants';
+import { type Entity, Villager, Zombie } from './entity';
+import { Grid } from './grid';
+import type { LevelConfig } from './level';
+import { TileType, type Vector2 } from './types';
 
 export class Game {
     grid: Grid;
@@ -36,7 +36,7 @@ export class Game {
     }
 
     private cloneTiles(tiles: TileType[][]): TileType[][] {
-        return tiles.map(row => [...row]);
+        return tiles.map((row) => [...row]);
     }
 
     update(delta: number) {
@@ -62,9 +62,9 @@ export class Game {
         this.checkGameOver();
 
         // Cleanup dead entities
-        this.entities = this.entities.filter(e => !e.isDead);
-        this.villagers = this.villagers.filter(e => !e.isDead);
-        this.zombies = this.zombies.filter(e => !e.isDead);
+        this.entities = this.entities.filter((e) => !e.isDead);
+        this.villagers = this.villagers.filter((e) => !e.isDead);
+        this.zombies = this.zombies.filter((e) => !e.isDead);
     }
 
     private updateVillagerSpawn(delta: number) {
@@ -139,10 +139,29 @@ export class Game {
 
     private checkGoal() {
         for (const villager of this.villagers) {
-            // Check center of body
-            const gridPos = this.grid.toGrid(villager.position.x, villager.position.y);
-            // Check if the tile at the center is a Goal tile
-            if (this.grid.getTile(gridPos.x, gridPos.y) === TileType.Goal) {
+            // Check bounding box against Goal tiles
+            const top = villager.position.y - villager.height / 2;
+            const bottom = villager.position.y + villager.height / 2;
+            const left = villager.position.x - villager.width / 2;
+            const right = villager.position.x + villager.width / 2;
+
+            const startX = Math.floor(left / TILE_SIZE);
+            const endX = Math.floor(right / TILE_SIZE);
+            const startY = Math.floor(top / TILE_SIZE);
+            const endY = Math.floor(bottom / TILE_SIZE);
+
+            let hitGoal = false;
+            for (let y = startY; y <= endY; y++) {
+                for (let x = startX; x <= endX; x++) {
+                    if (this.grid.getTile(x, y) === TileType.Goal) {
+                        hitGoal = true;
+                        break;
+                    }
+                }
+                if (hitGoal) break;
+            }
+
+            if (hitGoal) {
                 villager.isDead = true; // Reached goal, remove from game
                 this.goalCount++;
             }
@@ -155,7 +174,11 @@ export class Game {
 
     private checkGameOver() {
         // If all villagers are dead/gone and goal not reached
-        if (this.villagersSpawnedCount >= this.levelConfig.villagerSpawn.count && this.villagers.length === 0 && !this.isLevelCleared) {
+        if (
+            this.villagersSpawnedCount >= this.levelConfig.villagerSpawn.count &&
+            this.villagers.length === 0 &&
+            !this.isLevelCleared
+        ) {
             this.isGameOver = true;
         }
     }
