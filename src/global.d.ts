@@ -4,7 +4,7 @@ declare global {
     interface Window {
         gameDebug: {
             // Scene Navigation
-            startLevel: (levelId?: string) => void;
+            startLevel: (levelIndex?: number) => void;
             goToTitle: () => void;
             restartLevel: () => void;
 

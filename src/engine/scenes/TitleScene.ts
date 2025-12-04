@@ -23,8 +23,8 @@ export class TitleScene extends Phaser.Scene {
 
         // Expose Debug API
         window.gameDebug = {
-            startLevel: () => this.scene.start('GameScene'), // Shortcut
-            goToTitle: () => {},
+            startLevel: (levelIndex?: number) => this.scene.start('GameScene', { levelIndex: levelIndex ?? 0 }),
+            goToTitle: () => this.scene.start('TitleScene'),
             restartLevel: () => {},
             forceGameOver: () => {},
             forceLevelClear: () => {},

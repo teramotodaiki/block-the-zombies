@@ -1,38 +1,12 @@
 import Phaser from 'phaser';
 import { Game } from '../../core/game';
-import { type LevelConfig, parseLevelGrid } from '../../core/level';
+import { LEVELS, type LevelConfig } from '../../core/level';
+import { LevelManager } from '../../core/level-manager';
 import { TileType } from '../../core/types';
 import { HUD } from '../../ui/HUD';
 import { OverlayManager } from '../../ui/OverlayManager';
 import { InputManager } from '../InputManager';
 import { Renderer } from '../Renderer';
-
-// Temporary test level
-const TEST_LEVEL: LevelConfig = {
-    id: 'test-level',
-    biome: 'plains',
-    width: 16, // 16 * 48 = 768 < 800
-    height: 12, // 12 * 48 = 576 < 600
-    tiles: parseLevelGrid([
-        '................',
-        '................',
-        '................',
-        '................',
-        '................',
-        '................',
-        '................',
-        '................',
-        '..............**',
-        '..............**',
-        'GGGGG.GGGGGGGGGG',
-        '################',
-    ]),
-    villagerSpawn: { position: { x: 1, y: 9 }, interval: 2000, count: 5 },
-    zombieSpawns: [],
-    goal: { position: { x: 14, y: 9 }, requiredCount: 3 },
-    maxBlocks: 10,
-    forbiddenTiles: [],
-};
 
 export class GameScene extends Phaser.Scene {
     private gameCore!: Game;
@@ -47,8 +21,31 @@ export class GameScene extends Phaser.Scene {
         super('GameScene');
     }
 
-    create() {
-        this.gameCore = new Game(TEST_LEVEL);
+    create(data: { levelIndex?: number }) {
+        const levelIndex = data.levelIndex ?? 0;
+        // Ideally LevelManager is a singleton or passed from previous scene.
+        // For now, let's instantiate it here or get from registry?
+        // Better: Pass LevelManager instance? No, data must be serializable.
+        // Let's assume we create a new LevelManager or use a global one.
+        // For simplicity, let's create a global instance in main.ts or just import LEVELS here.
+
+        // Actually, let's just use the LEVELS array directly for now,
+        // or create a LevelManager instance here if it holds state.
+        // If we want to track progress across scenes, we need a persistent manager.
+        // Let's attach it to the Game registry.
+
+        let levelManager = this.registry.get('levelManager') as LevelManager;
+        if (!levelManager) {
+            levelManager = new LevelManager(LEVELS);
+            this.registry.set('levelManager', levelManager);
+        }
+
+        // If specific index requested, set it
+        if (data.levelIndex !== undefined) {
+            levelManager.setLevel(data.levelIndex);
+        }
+
+        this.gameCore = new Game(levelManager.getCurrentLevel());
         this.gameRenderer = new Renderer(this, this.gameCore);
         this.inputManager = new InputManager(this, this.gameCore);
         this.hud = new HUD(this, this.gameCore);
@@ -63,8 +60,13 @@ export class GameScene extends Phaser.Scene {
 
         // Expose Debug API
         window.gameDebug = {
-            startLevel: () => {
-                console.log('Already in GameScene');
+            startLevel: (levelIndex?: number) => {
+                const idx = levelIndex ?? 0;
+                const levelManager = this.registry.get('levelManager') as LevelManager;
+                if (levelManager) {
+                    levelManager.setLevel(idx);
+                }
+                this.scene.restart({ levelIndex: idx });
             },
             goToTitle: () => this.scene.start('TitleScene'),
             restartLevel: () => this.scene.restart(),
@@ -102,8 +104,15 @@ export class GameScene extends Phaser.Scene {
             this.isGameEnded = true;
             this.overlayManager.showLevelClear(
                 () => {
-                    console.log('Next Level - TODO');
-                    this.scene.restart(); // Temporary: Restart level
+                    console.log('Next Level');
+                    const levelManager = this.registry.get('levelManager') as LevelManager;
+                    if (levelManager.hasNextLevel()) {
+                        levelManager.nextLevel();
+                        this.scene.restart({ levelIndex: undefined }); // Use current index from manager
+                    } else {
+                        console.log('All levels cleared!');
+                        this.scene.start('TitleScene');
+                    }
                 },
                 () => this.scene.restart(),
                 () => this.scene.start('TitleScene'),

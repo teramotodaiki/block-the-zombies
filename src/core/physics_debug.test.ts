@@ -1,8 +1,8 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { Grid } from './grid';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { MOVE_SPEED, TILE_SIZE } from './constants';
 import { Villager } from './entity';
+import { Grid } from './grid';
 import { TileType } from './types';
-import { TILE_SIZE, MOVE_SPEED } from './constants';
 
 describe('Physics Debug', () => {
     let grid: Grid;

@@ -1,31 +1,53 @@
 import Phaser from 'phaser';
 
+import { LEVELS } from '../../core/level';
+import { LevelManager } from '../../core/level-manager';
+
 export class LevelSelectScene extends Phaser.Scene {
     constructor() {
         super('LevelSelectScene');
     }
 
     create() {
-        this.cameras.main.setBackgroundColor('#2c3e50');
+        this.cameras.main.setBackgroundColor('#87CEEB');
 
-        // Header
-        const titleText = this.add.text(this.cameras.main.centerX, 50, 'SELECT LEVEL', {
-            fontFamily: '"VT323", monospace',
-            fontSize: '48px',
-            color: '#ffffff',
-        });
-        titleText.setOrigin(0.5);
+        // Title
+        const title = this.add
+            .text(400, 100, 'SELECT LEVEL', {
+                fontSize: '48px',
+                color: '#ffffff',
+                fontStyle: 'bold',
+                stroke: '#000000',
+                strokeThickness: 6,
+            })
+            .setOrigin(0.5);
 
-        // Draw Map Nodes
-        this.createLevelNode(200, 300, '1', true);
-        this.createLevelNode(400, 300, '2', false);
-        this.createLevelNode(600, 300, '3', false);
+        // Level Grid
+        const startX = 200;
+        const startY = 250;
+        const cols = 4;
+        const spacingX = 130;
+        const spacingY = 130;
 
-        // Draw Lines
-        const graphics = this.add.graphics();
-        graphics.lineStyle(4, 0xffffff);
-        graphics.lineBetween(232, 300, 368, 300);
-        graphics.lineBetween(432, 300, 568, 300);
+        // Ensure LevelManager exists
+        let levelManager = this.registry.get('levelManager') as LevelManager;
+        if (!levelManager) {
+            levelManager = new LevelManager(LEVELS);
+            this.registry.set('levelManager', levelManager);
+        }
+
+        const levelCount = levelManager.getLevelCount();
+
+        for (let i = 0; i < levelCount; i++) {
+            const col = i % cols;
+            const row = Math.floor(i / cols);
+            const x = startX + col * spacingX;
+            const y = startY + row * spacingY;
+
+            this.createLevelButton(x, y, i + 1, () => {
+                this.scene.start('GameScene', { levelIndex: i });
+            });
+        }
 
         // Back Button
         this.createButton(60, 540, 'btn-home', () => {
@@ -34,7 +56,7 @@ export class LevelSelectScene extends Phaser.Scene {
 
         // Expose Debug API
         window.gameDebug = {
-            startLevel: () => this.scene.start('GameScene'),
+            startLevel: (levelIndex?: number) => this.scene.start('GameScene', { levelIndex: levelIndex ?? 0 }),
             goToTitle: () => this.scene.start('TitleScene'),
             restartLevel: () => {},
             forceGameOver: () => {},
@@ -43,38 +65,48 @@ export class LevelSelectScene extends Phaser.Scene {
         };
     }
 
-    private createLevelNode(x: number, y: number, label: string, unlocked: boolean) {
-        const texture = unlocked ? 'icon-unlock' : 'icon-lock';
-        const icon = this.add.image(x, y, texture);
-        icon.setDisplaySize(64, 64);
+    private createLevelButton(x: number, y: number, level: number, onClick: () => void) {
+        const btn = this.add.container(x, y);
 
-        if (unlocked) {
-            // Add level number on top if unlocked?
-            // Or just rely on the icon being distinct.
-            // Let's add the number for clarity.
-            const text = this.add.text(x, y + 40, label, {
-                fontFamily: '"VT323", monospace',
-                fontSize: '32px',
+        const bg = this.add.rectangle(0, 0, 100, 100, 0x4caf50);
+        bg.setStrokeStyle(4, 0x2e7d32);
+        const shadow = this.add.rectangle(0, 4, 100, 100, 0x000000, 0.5); // Simple shadow
+
+        const text = this.add
+            .text(0, 0, level.toString(), {
+                fontSize: '48px',
                 color: '#ffffff',
-            });
-            text.setOrigin(0.5);
+                fontStyle: 'bold',
+            })
+            .setOrigin(0.5);
 
-            icon.setInteractive({ useHandCursor: true });
-            icon.on('pointerdown', () => {
-                this.scene.start('GameScene');
-            });
+        btn.add([shadow, bg, text]);
+        btn.setSize(100, 100);
+        btn.setInteractive({ useHandCursor: true });
 
-            icon.on('pointerover', () => icon.setScale(1.1));
-            icon.on('pointerout', () => icon.setScale(1.0));
-        } else {
-            // Locked text
-            const text = this.add.text(x, y + 40, label, {
-                fontFamily: '"VT323", monospace',
-                fontSize: '32px',
-                color: '#7f8c8d',
-            });
-            text.setOrigin(0.5);
-        }
+        btn.on('pointerdown', () => {
+            bg.y += 4;
+            text.y += 4;
+            shadow.visible = false;
+        });
+
+        btn.on('pointerup', () => {
+            bg.y = 0;
+            text.y = 0;
+            shadow.visible = true;
+            onClick();
+        });
+
+        btn.on('pointerout', () => {
+            bg.y = 0;
+            text.y = 0;
+            shadow.visible = true;
+        });
+
+        // Assuming 'this.buttons' is meant to be defined elsewhere,
+        // or this line should be removed if not needed.
+        // For now, commenting it out to avoid compilation errors.
+        // this.buttons.push(btn);
     }
 
     private createButton(x: number, y: number, texture: string, onClick: () => void) {
