@@ -58,6 +58,27 @@ export class Renderer {
 
                     if (texture) {
                         const sprite = this.scene.add.sprite(worldX, worldY, texture);
+                        if (tile === TileType.Goal) {
+                            // Goal is 2x2 (96x96), but tile logic is 48x48.
+                            // We should only render it once for the top-left tile of the goal area.
+                            // But our grid logic doesn't explicitly group them.
+                            // Hack: Render it for every goal tile but offset/scale?
+                            // Better: Render only if it's the top-left of a goal block?
+                            // Given TEST_LEVEL has goal at (14,8), (14,9), (15,8), (15,9).
+                            // If we render a 96x96 sprite at (14,8), it covers all 4.
+                            // So we should only render at (14,8).
+                            // How to detect? Check neighbors?
+                            // Or just render 48x48 slice?
+                            // The asset is 96x96.
+                            // Let's just scale it down to 48x48 for now to fit the tile?
+                            // Or render it centered on the 2x2 area?
+                            // Let's try scaling for now to avoid complexity, or just render it big and let it overlap?
+                            // If we render big at every tile, it will look messy.
+                            // Let's assume the Goal tile in the grid is just a marker.
+                            // We will render the Goal Object separately?
+                            // For now, let's just scale it to 48x48 so it looks like a small goal on each tile.
+                            sprite.setDisplaySize(48, 48);
+                        }
                         this.tileGroup.add(sprite);
                     }
                 }
@@ -96,12 +117,13 @@ export class Renderer {
             if (!sprite) {
                 sprite = this.scene.add.sprite(villager.position.x, villager.position.y, 'entity-villager');
                 // sprite.setOrigin(0.5, 1); // Reverted to default (Center) as physics uses Center
+                sprite.play('villager-walk');
                 this.villagerGroup.add(sprite);
                 this.spriteMap.set(villager, sprite);
             }
 
             sprite.x = villager.position.x;
-            sprite.y = villager.position.y;
+            sprite.y = villager.position.y - 16; // Offset for visual alignment (sprite is taller)
             sprite.flipX = villager.direction === -1;
         }
 
@@ -112,12 +134,13 @@ export class Renderer {
             if (!sprite) {
                 sprite = this.scene.add.sprite(zombie.position.x, zombie.position.y, 'entity-zombie');
                 // sprite.setOrigin(0.5, 1);
+                sprite.play('zombie-walk');
                 this.zombieGroup.add(sprite);
                 this.spriteMap.set(zombie, sprite);
             }
 
             sprite.x = zombie.position.x;
-            sprite.y = zombie.position.y;
+            sprite.y = zombie.position.y - 16; // Offset for visual alignment
             sprite.flipX = zombie.direction === -1;
         }
 

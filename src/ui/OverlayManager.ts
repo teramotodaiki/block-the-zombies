@@ -38,10 +38,10 @@ export class OverlayManager extends Phaser.GameObjects.Container {
         this.messageText.setColor('#ff4444');
 
         // Retry Button
-        this.createButton(300, 400, '🔄', 0xffffff, onRetry);
+        this.createButton(300, 400, 'btn-retry', 0xffffff, onRetry);
 
         // Home Button
-        this.createButton(500, 400, '🏠', 0xffffff, onHome);
+        this.createButton(500, 400, 'btn-home', 0xffffff, onHome);
 
         this.show();
     }
@@ -52,18 +52,18 @@ export class OverlayManager extends Phaser.GameObjects.Container {
         this.messageText.setColor('#44ff44');
 
         // Next Level Button (Center)
-        this.createButton(400, 350, '➡️', 0x4CAF50, onNext);
+        this.createButton(400, 350, 'btn-next', 0x4CAF50, onNext);
 
         // Retry Button
-        this.createButton(250, 450, '🔄', 0xffffff, onRetry);
+        this.createButton(250, 450, 'btn-retry', 0xffffff, onRetry);
 
         // Home Button
-        this.createButton(550, 450, '🏠', 0xffffff, onHome);
+        this.createButton(550, 450, 'btn-home', 0xffffff, onHome);
 
         this.show();
     }
 
-    private createButton(x: number, y: number, label: string, color: number, onClick: () => void) {
+    private createButton(x: number, y: number, texture: string, color: number, onClick: () => void) {
         const btn = this.scene.add.container(x, y);
 
         const bg = this.scene.add.rectangle(0, 0, 80, 80, 0xe0e0e0);
@@ -71,22 +71,22 @@ export class OverlayManager extends Phaser.GameObjects.Container {
 
         const shadow = this.scene.add.rectangle(0, 40, 80, 6, 0x4a4a4a).setOrigin(0.5, 0);
 
-        const text = this.scene.add.text(0, 0, label, { fontSize: '40px' }).setOrigin(0.5);
-        text.setColor('#333333');
+        const icon = this.scene.add.image(0, 0, texture);
+        icon.setDisplaySize(48, 48);
 
-        btn.add([shadow, bg, text]);
+        btn.add([shadow, bg, icon]);
         btn.setSize(80, 80);
         btn.setInteractive({ useHandCursor: true });
 
         btn.on('pointerdown', () => {
             bg.y += 6;
-            text.y += 6;
+            icon.y += 6;
             shadow.visible = false;
         });
 
         const resetBtn = () => {
             bg.y = 0;
-            text.y = 0;
+            icon.y = 0;
             shadow.visible = true;
         };
 

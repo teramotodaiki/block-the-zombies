@@ -6,47 +6,43 @@ export class BootScene extends Phaser.Scene {
     }
 
     preload() {
-        // Create placeholder graphics
-        const graphics = this.make.graphics({ x: 0, y: 0 });
+        // UI
+        this.load.image('title-logo', 'assets/game/title_logo.png');
+        this.load.image('btn-play', 'assets/game/btn_play.png');
+        this.load.image('btn-home', 'assets/game/btn_home.png');
+        this.load.image('btn-retry', 'assets/game/btn_retry.png');
+        this.load.image('btn-next', 'assets/game/btn_next.png');
+        this.load.image('btn-pause', 'assets/game/btn_pause.png');
+        this.load.image('icon-lock', 'assets/game/icon_lock.png');
+        this.load.image('icon-unlock', 'assets/game/icon_unlock.png');
 
-        // Tile: Ground (Brown)
-        graphics.fillStyle(0x8B4513);
-        graphics.fillRect(0, 0, 48, 48);
-        graphics.generateTexture('tile-ground', 48, 48);
-        graphics.clear();
+        // Tiles
+        this.load.image('tile-ground', 'assets/game/tile_ground.png');
+        this.load.image('tile-bedrock', 'assets/game/tile_bedrock.png');
+        this.load.image('tile-magma', 'assets/game/tile_magma.png');
+        this.load.image('tile-goal', 'assets/game/goal.png');
 
-        // Tile: Bedrock (Gray)
-        graphics.fillStyle(0x808080);
-        graphics.fillRect(0, 0, 48, 48);
-        graphics.generateTexture('tile-bedrock', 48, 48);
-        graphics.clear();
-
-        // Tile: Magma (Red)
-        graphics.fillStyle(0xFF0000);
-        graphics.fillRect(0, 0, 48, 48);
-        graphics.generateTexture('tile-magma', 48, 48);
-        graphics.clear();
-
-        // Tile: Goal (Yellow)
-        graphics.fillStyle(0xFFD700);
-        graphics.fillRect(0, 0, 48, 48);
-        graphics.generateTexture('tile-goal', 48, 48);
-        graphics.clear();
-
-        // Entity: Villager (Green)
-        graphics.fillStyle(0x00FF00);
-        graphics.fillRect(0, 0, 32, 96);
-        graphics.generateTexture('entity-villager', 32, 96);
-        graphics.clear();
-
-        // Entity: Zombie (Purple)
-        graphics.fillStyle(0x800080);
-        graphics.fillRect(0, 0, 32, 48);
-        graphics.generateTexture('entity-zombie', 32, 48);
-        graphics.clear();
+        // Entities
+        this.load.spritesheet('entity-villager', 'assets/game/villager.png', { frameWidth: 32, frameHeight: 96 });
+        this.load.spritesheet('entity-zombie', 'assets/game/zombie.png', { frameWidth: 32, frameHeight: 96 });
     }
 
     create() {
+        // Create Animations
+        this.anims.create({
+            key: 'villager-walk',
+            frames: this.anims.generateFrameNumbers('entity-villager', { start: 0, end: 3 }),
+            frameRate: 8,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'zombie-walk',
+            frames: this.anims.generateFrameNumbers('entity-zombie', { start: 0, end: 3 }),
+            frameRate: 8,
+            repeat: -1
+        });
+
         // Transition to Title
         this.scene.start('TitleScene');
     }

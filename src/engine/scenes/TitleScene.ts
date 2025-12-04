@@ -8,10 +8,12 @@ export class TitleScene extends Phaser.Scene {
     create() {
         this.cameras.main.setBackgroundColor('#87CEEB');
 
-        // Title Text removed as requested (will be replaced by image later)
+        // Title Logo
+        const logo = this.add.image(this.cameras.main.centerX, 200, 'title-logo');
+        logo.setOrigin(0.5);
 
         // Play Button
-        this.createButton(this.cameras.main.centerX, 400, '▶️', () => {
+        this.createButton(this.cameras.main.centerX, 450, 'btn-play', () => {
             this.scene.start('LevelSelectScene');
         });
 
@@ -26,35 +28,36 @@ export class TitleScene extends Phaser.Scene {
         };
     }
 
-    private createButton(x: number, y: number, label: string, onClick: () => void) {
+    private createButton(x: number, y: number, texture: string, onClick: () => void) {
         const btn = this.add.container(x, y);
 
         const bg = this.add.rectangle(0, 0, 96, 96, 0x4CAF50);
         bg.setStrokeStyle(4, 0x2E7D32);
         const shadow = this.add.rectangle(0, 48, 96, 8, 0x2E7D32).setOrigin(0.5, 0);
 
-        const text = this.add.text(0, 0, label, { fontSize: '48px' }).setOrigin(0.5);
+        const icon = this.add.image(0, 0, texture);
+        icon.setDisplaySize(64, 64);
 
-        btn.add([shadow, bg, text]);
+        btn.add([shadow, bg, icon]);
         btn.setSize(96, 96);
         btn.setInteractive({ useHandCursor: true });
 
         btn.on('pointerdown', () => {
             bg.y += 8;
-            text.y += 8;
+            icon.y += 8;
             shadow.visible = false;
         });
 
         btn.on('pointerup', () => {
             bg.y = 0;
-            text.y = 0;
+            icon.y = 0;
             shadow.visible = true;
             onClick();
         });
 
         btn.on('pointerout', () => {
             bg.y = 0;
-            text.y = 0;
+            icon.y = 0;
             shadow.visible = true;
         });
     }

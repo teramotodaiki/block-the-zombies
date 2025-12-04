@@ -31,7 +31,7 @@ export class HUD extends Phaser.GameObjects.Container {
         this.add(bg);
 
         // --- Left Controls ---
-        this.homeBtn = this.createButton(40, 30, '🏠', 0xffffff, () => {
+        this.homeBtn = this.createButton(40, 30, 'btn-home', () => {
             // Long press handled separately
         });
         this.setupLongPress(this.homeBtn, () => {
@@ -39,13 +39,13 @@ export class HUD extends Phaser.GameObjects.Container {
             this.scene.scene.start('TitleScene');
         });
 
-        this.restartBtn = this.createButton(100, 30, '🔄', 0xffffff, () => { });
+        this.restartBtn = this.createButton(100, 30, 'btn-retry', () => { });
         this.setupLongPress(this.restartBtn, () => {
             console.log('Restart Long Press');
             this.scene.scene.restart();
         });
 
-        this.pauseBtn = this.createButton(160, 30, '⏸️', 0xffffff, () => {
+        this.pauseBtn = this.createButton(160, 30, 'btn-pause', () => {
             console.log('Pause Clicked');
             // Toggle pause logic here
         });
@@ -66,7 +66,7 @@ export class HUD extends Phaser.GameObjects.Container {
         this.add(this.blockCountText);
     }
 
-    private createButton(x: number, y: number, label: string, color: number, onClick: () => void): Phaser.GameObjects.Container {
+    private createButton(x: number, y: number, texture: string, onClick: () => void): Phaser.GameObjects.Container {
         const btn = this.scene.add.container(x, y);
 
         // Button Shape (Blocky)
@@ -76,23 +76,23 @@ export class HUD extends Phaser.GameObjects.Container {
         // 3D effect (bottom border)
         const shadow = this.scene.add.rectangle(0, 24, 48, 4, 0x4a4a4a).setOrigin(0.5, 0);
 
-        const text = this.scene.add.text(0, 0, label, { fontSize: '24px' }).setOrigin(0.5);
-        text.setColor('#333333');
+        const icon = this.scene.add.image(0, 0, texture);
+        icon.setDisplaySize(32, 32);
 
-        btn.add([shadow, bg, text]);
+        btn.add([shadow, bg, icon]);
         btn.setSize(48, 48);
         btn.setInteractive({ useHandCursor: true });
 
         // Click effect
         btn.on('pointerdown', () => {
             bg.y += 4;
-            text.y += 4;
+            icon.y += 4;
             shadow.visible = false;
         });
 
         const resetBtn = () => {
             bg.y = 0;
-            text.y = 0;
+            icon.y = 0;
             shadow.visible = true;
         };
 
