@@ -48,19 +48,13 @@ export class OverlayManager extends Phaser.GameObjects.Container {
         this.show();
     }
 
-    showLevelClear(onNext: () => void, onRetry: () => void, onHome: () => void) {
-        this.reset();
+    public showLevelClear(onNext: () => void) {
+        this.reset(); // Clear existing buttons and hide
         this.messageText.setText('LEVEL CLEAR!');
         this.messageText.setColor('#44ff44');
 
         // Next Level Button (Center)
         this.createButton(400, 350, 'btn-next', 0x4caf50, onNext);
-
-        // Retry Button
-        this.createButton(250, 450, 'btn-retry', 0xffffff, onRetry);
-
-        // Home Button
-        this.createButton(550, 450, 'btn-home', 0xffffff, onHome);
 
         this.show();
     }

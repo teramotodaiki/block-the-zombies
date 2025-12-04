@@ -102,21 +102,17 @@ export class GameScene extends Phaser.Scene {
             );
         } else if (this.gameCore.isLevelCleared) {
             this.isGameEnded = true;
-            this.overlayManager.showLevelClear(
-                () => {
-                    console.log('Next Level');
-                    const levelManager = this.registry.get('levelManager') as LevelManager;
-                    if (levelManager.hasNextLevel()) {
-                        levelManager.nextLevel();
-                        this.scene.restart({ levelIndex: undefined }); // Use current index from manager
-                    } else {
-                        console.log('All levels cleared!');
-                        this.scene.start('TitleScene');
-                    }
-                },
-                () => this.scene.restart(),
-                () => this.scene.start('TitleScene'),
-            );
+            this.overlayManager.showLevelClear(() => {
+                console.log('Next Level');
+                const levelManager = this.registry.get('levelManager') as LevelManager;
+                if (levelManager.hasNextLevel()) {
+                    levelManager.nextLevel();
+                    this.scene.restart({ levelIndex: undefined }); // Use current index from manager
+                } else {
+                    console.log('All levels cleared!');
+                    this.scene.start('TitleScene');
+                }
+            });
         }
     }
 }

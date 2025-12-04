@@ -11,17 +11,6 @@ export class LevelSelectScene extends Phaser.Scene {
     create() {
         this.cameras.main.setBackgroundColor('#87CEEB');
 
-        // Title
-        const title = this.add
-            .text(400, 100, 'SELECT LEVEL', {
-                fontSize: '48px',
-                color: '#ffffff',
-                fontStyle: 'bold',
-                stroke: '#000000',
-                strokeThickness: 6,
-            })
-            .setOrigin(0.5);
-
         // Level Grid
         const startX = 200;
         const startY = 250;
