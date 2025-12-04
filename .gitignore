@@ -125,3 +125,5 @@ dist-ssr
 
 # User Assets
 workbench/
+playwright-report/
+test-results/
