@@ -8,7 +8,10 @@
         "build": "tsc && vite build",
         "preview": "vite preview",
         "test": "vitest run",
-        "process-assets": "node scripts/process_assets.js"
+        "process-assets": "node scripts/process_assets.js",
+        "lint": "biome lint .",
+        "format": "biome format --write .",
+        "check": "biome check --write ."
     },
     "devDependencies": {
         "@biomejs/biome": "^2.3.8",
