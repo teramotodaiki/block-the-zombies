@@ -35,8 +35,8 @@ export class BootScene extends Phaser.Scene {
 
         // Entity: Villager (Green)
         graphics.fillStyle(0x00FF00);
-        graphics.fillRect(0, 0, 32, 48);
-        graphics.generateTexture('entity-villager', 32, 48);
+        graphics.fillRect(0, 0, 32, 96);
+        graphics.generateTexture('entity-villager', 32, 96);
         graphics.clear();
 
         // Entity: Zombie (Purple)

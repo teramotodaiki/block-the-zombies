@@ -95,7 +95,7 @@ export class Renderer {
             let sprite = this.spriteMap.get(villager);
             if (!sprite) {
                 sprite = this.scene.add.sprite(villager.position.x, villager.position.y, 'entity-villager');
-                sprite.setOrigin(0.5, 1);
+                // sprite.setOrigin(0.5, 1); // Reverted to default (Center) as physics uses Center
                 this.villagerGroup.add(sprite);
                 this.spriteMap.set(villager, sprite);
             }
@@ -111,7 +111,7 @@ export class Renderer {
             let sprite = this.spriteMap.get(zombie);
             if (!sprite) {
                 sprite = this.scene.add.sprite(zombie.position.x, zombie.position.y, 'entity-zombie');
-                sprite.setOrigin(0.5, 1);
+                // sprite.setOrigin(0.5, 1);
                 this.zombieGroup.add(sprite);
                 this.spriteMap.set(zombie, sprite);
             }

@@ -18,7 +18,9 @@ const TEST_LEVEL: LevelConfig = {
                 // if (x === 5 || x === 6) return TileType.Magma; // Removed for auto-clear test
                 return TileType.Ground;
             }
-            if (y === 9 && x === 14) return TileType.Goal; // Add Goal (House)
+            // Goal 2x2 at (14, 8) and (14, 9), (15, 8), (15, 9)
+            if ((y === 8 || y === 9) && (x === 14 || x === 15)) return TileType.Goal;
+
             if (y === 7 && x === 8) return TileType.Ground; // Platform
             return TileType.Empty;
         })

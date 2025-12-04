@@ -79,9 +79,11 @@ export class Game {
     }
 
     private spawnVillager(pos: Vector2) {
-        // Convert grid pos to world pos (center of tile)
+        // Convert grid pos to world pos
+        // Spawn so feet are at the bottom of the tile
+        const height = 96; // Villager height
         const worldX = pos.x * TILE_SIZE + TILE_SIZE / 2;
-        const worldY = pos.y * TILE_SIZE + TILE_SIZE / 2; // Or bottom?
+        const worldY = (pos.y + 1) * TILE_SIZE - height / 2;
         const villager = new Villager(worldX, worldY);
         this.addEntity(villager);
         this.villagersSpawnedCount++;
@@ -136,11 +138,11 @@ export class Game {
     }
 
     private checkGoal() {
-        const goalPos = this.levelConfig.goal.position;
         for (const villager of this.villagers) {
-            // Check center of body, not feet
-            const gridPos = this.grid.toGrid(villager.position.x, villager.position.y - villager.height / 2);
-            if (gridPos.x === goalPos.x && gridPos.y === goalPos.y) {
+            // Check center of body
+            const gridPos = this.grid.toGrid(villager.position.x, villager.position.y);
+            // Check if the tile at the center is a Goal tile
+            if (this.grid.getTile(gridPos.x, gridPos.y) === TileType.Goal) {
                 villager.isDead = true; // Reached goal, remove from game
                 this.goalCount++;
             }

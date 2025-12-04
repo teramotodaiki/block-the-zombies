@@ -62,14 +62,15 @@ export abstract class Entity {
 
         // Check downward collision (landing)
         if (this.velocity.y > 0) {
-            const bottomEdge = nextY;
+            const bottomEdge = nextY + this.height / 2; // Bottom relative to center
             const tileX = Math.floor(this.position.x / TILE_SIZE);
             const tileY = Math.floor(bottomEdge / TILE_SIZE);
 
             // Check if we entered a solid tile
             if (grid.isSolid(tileX, tileY)) {
                 // Landed
-                this.position.y = tileY * TILE_SIZE; // Snap to top of tile
+                // Snap so bottom edge is at top of tile
+                this.position.y = tileY * TILE_SIZE - this.height / 2;
                 this.velocity.y = 0;
                 this.isGrounded = true;
                 return;
@@ -85,7 +86,7 @@ export class Villager extends Entity {
     direction: Direction;
 
     constructor(x: number, y: number) {
-        super(x, y, 32, 48); // TBD: Adjust size
+        super(x, y, 32, 96); // Height 96 (2 tiles)
         this.direction = Direction.Right;
         this.velocity.x = MOVE_SPEED;
     }
