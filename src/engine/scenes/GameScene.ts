@@ -15,9 +15,10 @@ const TEST_LEVEL: LevelConfig = {
         Array.from({ length: 16 }, (_, x) => {
             if (y === 11) return TileType.Bedrock;
             if (y === 10) {
-                if (x === 5 || x === 6) return TileType.Magma; // Add Magma
+                // if (x === 5 || x === 6) return TileType.Magma; // Removed for auto-clear test
                 return TileType.Ground;
             }
+            if (y === 9 && x === 14) return TileType.Goal; // Add Goal (House)
             if (y === 7 && x === 8) return TileType.Ground; // Platform
             return TileType.Empty;
         })

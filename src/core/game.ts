@@ -138,7 +138,8 @@ export class Game {
     private checkGoal() {
         const goalPos = this.levelConfig.goal.position;
         for (const villager of this.villagers) {
-            const gridPos = this.grid.toGrid(villager.position.x, villager.position.y);
+            // Check center of body, not feet
+            const gridPos = this.grid.toGrid(villager.position.x, villager.position.y - villager.height / 2);
             if (gridPos.x === goalPos.x && gridPos.y === goalPos.y) {
                 villager.isDead = true; // Reached goal, remove from game
                 this.goalCount++;
