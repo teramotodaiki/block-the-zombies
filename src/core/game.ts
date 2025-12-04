@@ -18,7 +18,7 @@ export class Game {
 
     goalCount: number;
     isGameOver: boolean;
-    isClear: boolean;
+    isLevelCleared: boolean;
 
     constructor(config: LevelConfig) {
         this.levelConfig = config;
@@ -32,7 +32,7 @@ export class Game {
         this.villagersSpawnedCount = 0;
         this.goalCount = 0;
         this.isGameOver = false;
-        this.isClear = false;
+        this.isLevelCleared = false;
     }
 
     private cloneTiles(tiles: TileType[][]): TileType[][] {
@@ -40,7 +40,7 @@ export class Game {
     }
 
     update(delta: number) {
-        if (this.isGameOver || this.isClear) return;
+        if (this.isGameOver || this.isLevelCleared) return;
 
         this.timeElapsed += delta; // delta in seconds? No, usually ms in Phaser, but let's standardize on seconds for core logic?
         // Let's assume delta is in SECONDS for physics calculations as per constants.
@@ -149,13 +149,13 @@ export class Game {
         }
 
         if (this.goalCount >= this.levelConfig.goal.requiredCount) {
-            this.isClear = true;
+            this.isLevelCleared = true;
         }
     }
 
     private checkGameOver() {
         // If all villagers are dead/gone and goal not reached
-        if (this.villagersSpawnedCount >= this.levelConfig.villagerSpawn.count && this.villagers.length === 0 && !this.isClear) {
+        if (this.villagersSpawnedCount >= this.levelConfig.villagerSpawn.count && this.villagers.length === 0 && !this.isLevelCleared) {
             this.isGameOver = true;
         }
     }

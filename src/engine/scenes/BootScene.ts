@@ -47,6 +47,7 @@ export class BootScene extends Phaser.Scene {
     }
 
     create() {
-        this.scene.start('GameScene');
+        // Transition to Title
+        this.scene.start('TitleScene');
     }
 }
