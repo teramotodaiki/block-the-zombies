@@ -7,7 +7,6 @@
 | ファイル名 | 説明 | 推奨サイズ |
 |---|---|---|
 | `title_logo.png` | ゲームタイトルロゴ "BLOCK THE ZOMBIES" | ~600x200px |
-| `btn_play.png` | プレイボタン（三角/矢印） | 96x96px |
 | `btn_home.png` | ホームボタン（家のアイコン） | 48x48px |
 | `btn_retry.png` | リトライボタン（回転矢印） | 48x48px |
 | `btn_next.png` | 次のレベルボタン（右矢印） | 80x80px |

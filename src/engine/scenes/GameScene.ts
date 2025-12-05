@@ -11,6 +11,8 @@ export class GameScene extends Phaser.Scene {
     private gameCore!: Game;
     private gameRenderer!: Renderer;
     private overlayManager!: OverlayManager;
+    private inputManager!: InputManager;
+    private hud!: HUD;
     private isGameEnded = false;
 
     constructor() {
@@ -18,7 +20,6 @@ export class GameScene extends Phaser.Scene {
     }
 
     create(data: { levelIndex?: number }) {
-        const _levelIndex = data.levelIndex ?? 0;
         // Ideally LevelManager is a singleton or passed from previous scene.
         // For now, let's instantiate it here or get from registry?
         // Better: Pass LevelManager instance? No, data must be serializable.
@@ -101,17 +102,13 @@ export class GameScene extends Phaser.Scene {
         } else if (this.gameCore.isLevelCleared) {
             this.isGameEnded = true;
             this.overlayManager.showLevelClear(() => {
-                console.log('Next Level');
-                const levelManager = this.registry.get(
-                    'levelManager',
-                ) as LevelManager;
-                if (levelManager.hasNextLevel()) {
-                    levelManager.nextLevel();
-                    this.scene.restart({ levelIndex: undefined }); // Use current index from manager
-                } else {
-                    console.log('All levels cleared!');
-                    this.scene.start('TitleScene');
-                }
+                console.log('Go to Level Select');
+                // Unlock next level logic should be here (TBD in LevelManager)
+                // const levelManager = this.registry.get('levelManager') as LevelManager;
+                // For now, just advance the index so LevelSelect knows?
+                // Or LevelSelect should read progress.
+                // Let's just go to LevelSelectScene.
+                this.scene.start('LevelSelectScene');
             });
         }
     }

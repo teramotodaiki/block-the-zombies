@@ -16,16 +16,22 @@ export class Game {
     villagerSpawnTimer: number;
     villagersSpawnedCount: number;
 
+    // Track which zombies have been spawned.
+    // We use a boolean array corresponding to levelConfig.zombieSpawns indices.
+    zombieSpawnedFlags: boolean[];
+
     goalCount: number;
     isGameOver: boolean;
     isLevelCleared: boolean;
 
     constructor(config: LevelConfig) {
-        this.levelConfig = config;
+        // Deep copy config to prevent mutation of original level data
+        this.levelConfig = JSON.parse(JSON.stringify(config));
+
         this.grid = new Grid(
-            config.width,
-            config.height,
-            this.cloneTiles(config.tiles),
+            this.levelConfig.width,
+            this.levelConfig.height,
+            this.cloneTiles(this.levelConfig.tiles),
         );
         this.entities = [];
         this.villagers = [];
@@ -34,6 +40,12 @@ export class Game {
 
         this.villagerSpawnTimer = 0;
         this.villagersSpawnedCount = 0;
+
+        // Initialize flags for zombie spawns
+        this.zombieSpawnedFlags = new Array(
+            this.levelConfig.zombieSpawns.length,
+        ).fill(false);
+
         this.goalCount = 0;
         this.isGameOver = false;
         this.isLevelCleared = false;
@@ -46,8 +58,7 @@ export class Game {
     update(delta: number) {
         if (this.isGameOver || this.isLevelCleared) return;
 
-        this.timeElapsed += delta; // delta in seconds? No, usually ms in Phaser, but let's standardize on seconds for core logic?
-        // Let's assume delta is in SECONDS for physics calculations as per constants.
+        this.timeElapsed += delta; // delta in seconds
 
         // Spawn Villagers
         this.updateVillagerSpawn(delta);
@@ -94,17 +105,25 @@ export class Game {
     }
 
     private updateZombieSpawn(_delta: number) {
-        // TBD: Efficiently check zombie spawns
-        for (const _spawn of this.levelConfig.zombieSpawns) {
-            // Check if it's time to spawn
-            // This is a simple check, might need a flag to prevent double spawning if we just check time > spawn.time
-            // For now, let's assume we remove them from a list or mark as spawned.
-            // But levelConfig is immutable ideally.
-            // Let's just check if timeElapsed crosses the threshold in this frame?
-            // Or keep an index?
+        // Check each spawn definition
+        for (let i = 0; i < this.levelConfig.zombieSpawns.length; i++) {
+            if (this.zombieSpawnedFlags[i]) continue;
+
+            const spawnDef = this.levelConfig.zombieSpawns[i];
+            // time is in ms
+            if (this.timeElapsed * 1000 >= spawnDef.time) {
+                this.spawnZombie(spawnDef.position);
+                this.zombieSpawnedFlags[i] = true;
+            }
         }
-        // Simplified for now:
-        // We need a state to track which zombies have spawned.
+    }
+
+    private spawnZombie(pos: Vector2) {
+        const height = 48; // Zombie height (approx)
+        const worldX = pos.x * TILE_SIZE + TILE_SIZE / 2;
+        const worldY = (pos.y + 1) * TILE_SIZE - height / 2;
+        const zombie = new Zombie(worldX, worldY);
+        this.addEntity(zombie);
     }
 
     private addEntity(entity: Entity) {
@@ -198,25 +217,22 @@ export class Game {
 
         const currentTile = this.grid.getTile(gridX, gridY);
 
-        // Destroy
-        // TODO: Check if it's a player block (we need to track which blocks are player placed vs level geometry)
-        // For now, let's assume Ground is destroyable if we implement that distinction.
-        // Spec says: "Player can place/break blocks". "Bedrock is indestructible".
-        // We might need a separate layer or flag for player blocks.
-        // Or just use TileType.Ground and assume all Ground is breakable?
-        // "Bedrock is indestructible".
-
         if (currentTile === TileType.Empty) {
             // Place
+            // Check max blocks
+            if (this.levelConfig.maxBlocks <= 0) return false;
+
             // Check rules: adjacent to solid
             if (this.hasSolidNeighbor(gridX, gridY)) {
                 this.grid.setTile(gridX, gridY, TileType.Ground);
+                this.levelConfig.maxBlocks--; // Decrement inventory
                 return true;
             }
             return false;
         } else if (currentTile === TileType.Ground) {
             // Break
             this.grid.setTile(gridX, gridY, TileType.Empty);
+            this.levelConfig.maxBlocks++; // Increment inventory
             return true;
         }
 
