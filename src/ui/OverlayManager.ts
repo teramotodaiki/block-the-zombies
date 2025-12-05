@@ -120,23 +120,9 @@ export class OverlayManager extends Phaser.GameObjects.Container {
         });
     }
 
-    public showPauseMenu(onResume: () => void, onRetry: () => void, onHome: () => void) {
-        this.reset();
-        // this.messageImage.setTexture('ui-paused');
-        this.messageImage.setVisible(false);
-        this.messageText.setVisible(false);
-
-        // Resume Button
-        this.createButton(400, 300, 'btn-play', 0x2196f3, onResume);
-
-        // Retry Button
-        this.createButton(300, 420, 'btn-retry', 0xff9800, onRetry);
-
-        // Home Button
-        this.createButton(500, 420, 'btn-home', 0xf44336, onHome);
-
-        this.show();
-    }
+    // public showPauseMenu(onResume: () => void, onRetry: () => void, onHome: () => void) {
+    //     // Removed per user request
+    // }
 
     hide() {
         this.visible = false;

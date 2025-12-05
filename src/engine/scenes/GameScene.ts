@@ -48,20 +48,25 @@ export class GameScene extends Phaser.Scene {
         this.hud = new HUD(this, this.gameCore);
         this.overlayManager = new OverlayManager(this);
 
+        this.hud.onHomeClick = () => {
+            this.scene.start('TitleScene');
+        };
+
+        this.hud.onRetryClick = () => {
+            this.scene.restart();
+        };
+
         this.hud.onPauseClick = () => {
-            this.gameCore.isPaused = true;
-            this.overlayManager.showPauseMenu(
-                () => { // Resume
-                    this.gameCore.isPaused = false;
-                    this.overlayManager.hide();
-                },
-                () => { // Retry
-                    this.scene.restart();
-                },
-                () => { // Home
-                    this.scene.start('TitleScene'); // Or LevelSelectScene? User said Home so Title or LevelSelect. Let's go Title for now or check spec. 通常ホームはLevelSelectかTitle。戻るボタンはTitleSceneへ行っていたのでTitleSceneにする。
-                }
-            );
+            this.gameCore.isPaused = !this.gameCore.isPaused;
+            // Optional: Show/Hide a simple "PAUSED" text or overlay background if desired,
+            // but user asked to remove the overlay image.
+            // If we want to dim the background, we can use overlayManager just for that,
+            // but for now let's just toggle state as the buttons are on HUD.
+            if (this.gameCore.isPaused) {
+                // this.overlayManager.showDim(); // If we implemented a simple dim
+            } else {
+                // this.overlayManager.hide();
+            }
         };
 
         // Initial render

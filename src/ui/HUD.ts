@@ -4,15 +4,18 @@ import type { Game } from '../core/game';
 export class HUD extends Phaser.GameObjects.Container {
     private gameCore: Game;
     private blockCountText!: Phaser.GameObjects.Text;
-    private goalIcons: Phaser.GameObjects.Image[] = [];
-    private pauseBtn!: Phaser.GameObjects.Container;
+    private pauseBtn!: Phaser.GameObjects.Image;
+
     public onPauseClick?: () => void;
+    public onHomeClick?: () => void;
+    public onRetryClick?: () => void;
 
     constructor(scene: Phaser.Scene, gameCore: Game) {
         super(scene, 0, 0);
         this.gameCore = gameCore;
         this.scene.add.existing(this);
         this.setScrollFactor(0); // Fix to camera
+        this.setDepth(200); // Ensure HUD is on top
 
         this.createElements();
 
@@ -36,19 +39,36 @@ export class HUD extends Phaser.GameObjects.Container {
 
         this.add([blockIcon, this.blockCountText]);
 
-        // Pause Button
-        this.createPauseButton();
+        // Control Buttons (Center)
+        this.createControlButtons();
     }
 
-    private createPauseButton() {
-        this.pauseBtn = this.scene.add.container(750, 40);
+    private createControlButtons() {
+        const startX = 400; // Center
+        const y = 40;
+        const spacing = 70;
 
-        this.pauseBtn = this.scene.add.container(750, 40);
-        const btn = this.scene.add.image(0, 0, 'btn-pause');
+        // Home Button
+        this.createButton(startX - spacing, y, 'btn-home', () => {
+            if (this.onHomeClick) this.onHomeClick();
+        });
+
+        // Retry Button
+        this.createButton(startX, y, 'btn-retry', () => {
+            if (this.onRetryClick) this.onRetryClick();
+        });
+
+        // Pause/Play Button
+        this.pauseBtn = this.createButton(startX + spacing, y, 'btn-pause', () => {
+            if (this.onPauseClick) this.onPauseClick();
+        });
+    }
+
+    private createButton(x: number, y: number, key: string, callback: () => void): Phaser.GameObjects.Image {
+        const container = this.scene.add.container(x, y);
+        const btn = this.scene.add.image(0, 0, key);
         btn.setDisplaySize(48, 48);
         btn.setInteractive({ useHandCursor: true });
-
-        this.pauseBtn.add(btn);
 
         btn.on('pointerdown', () => {
             btn.setTint(0xcccccc);
@@ -56,16 +76,17 @@ export class HUD extends Phaser.GameObjects.Container {
 
         btn.on('pointerup', () => {
             btn.clearTint();
-            if (this.onPauseClick) {
-                this.onPauseClick();
-            }
+            callback();
         });
 
         btn.on('pointerout', () => {
             btn.clearTint();
         });
 
-        this.add(this.pauseBtn);
+        container.add(btn);
+        this.add(container);
+
+        return btn;
     }
 
     private updateUI() {
@@ -74,42 +95,13 @@ export class HUD extends Phaser.GameObjects.Container {
         // Update Block Count
         this.blockCountText.setText(`${this.gameCore.levelConfig.maxBlocks}`);
 
-        // Update Goal Icons
-        const required = this.gameCore.levelConfig.goal.requiredCount;
-        const current = this.gameCore.goalCount;
-
-        // Init icons if needed
-        if (this.goalIcons.length !== required) {
-            for (const icon of this.goalIcons) {
-                icon.destroy();
-            }
-            this.goalIcons = [];
-
-            // Center the goal icons
-            const startX = 400 - (required * 40) / 2;
-
-            for (let i = 0; i < required; i++) {
-                const icon = this.scene.add.image(
-                    startX + i * 40,
-                    40,
-                    'hud-goal-empty',
-                );
-                icon.setDisplaySize(32, 32);
-                this.add(icon);
-                this.goalIcons.push(icon);
-            }
+        // Update Pause Button Texture
+        if (this.gameCore.isPaused) {
+            this.pauseBtn.setTexture('btn-play');
+        } else {
+            this.pauseBtn.setTexture('btn-pause');
         }
-
-        // Update status
-        for (let i = 0; i < required; i++) {
-            if (i < current) {
-                this.goalIcons[i].setTexture('hud-goal-full'); // Reached
-                // this.goalIcons[i].setTint(0xffd700); // Gold tint
-            } else {
-                this.goalIcons[i].setTexture('hud-goal-empty'); // Not reached
-                // this.goalIcons[i].setTint(0x888888); // Grey tint
-            }
-        }
+        this.pauseBtn.setDisplaySize(48, 48);
     }
 
     destroy(fromScene?: boolean) {
