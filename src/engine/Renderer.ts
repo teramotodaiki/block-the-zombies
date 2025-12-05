@@ -73,7 +73,7 @@ export class Renderer {
 
                             // Use Sprite instead of Image
                             this.goalSprite = this.scene.add.sprite(centerX, centerY, 'tile-goal');
-                            this.goalSprite.setOrigin(0.5, 0.5); // Anchor bottom-ish
+                            this.goalSprite.setOrigin(0.5, 0.4); // Anchor bottom-ish
                             this.goalSprite.setDisplaySize(120, 90);
                             this.tileGroup.add(this.goalSprite);
 
