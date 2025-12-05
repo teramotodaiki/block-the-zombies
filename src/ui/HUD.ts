@@ -4,14 +4,9 @@ import type { Game } from '../core/game';
 export class HUD extends Phaser.GameObjects.Container {
     private gameCore: Game;
     private blockCountText!: Phaser.GameObjects.Text;
-    private goalIcons: Phaser.GameObjects.Rectangle[] = [];
-
-    private homeBtn!: Phaser.GameObjects.Container;
-    private restartBtn!: Phaser.GameObjects.Container;
+    private goalIcons: Phaser.GameObjects.Image[] = [];
     private pauseBtn!: Phaser.GameObjects.Container;
-
-    private readonly LONG_PRESS_DURATION = 1000;
-    private longPressTimer?: Phaser.Time.TimerEvent;
+    public onPauseClick?: () => void;
 
     constructor(scene: Phaser.Scene, gameCore: Game) {
         super(scene, 0, 0);
@@ -26,136 +21,58 @@ export class HUD extends Phaser.GameObjects.Container {
     }
 
     private createElements() {
-        // Background Bar
-        const bg = this.scene.add.rectangle(400, 30, 800, 60, 0x000000, 0.5);
-        this.add(bg);
+        // Block Count Display
+        // Icon
+        const blockIcon = this.scene.add.image(60, 40, 'icon-block'); // TBD asset
+        blockIcon.setDisplaySize(48, 48);
 
-        // --- Left Controls ---
-        this.homeBtn = this.createButton(40, 30, 'btn-home', () => {
-            // Long press handled separately
-        });
-        this.setupLongPress(this.homeBtn, () => {
-            console.log('Home Long Press');
-            this.scene.scene.start('TitleScene');
-        });
-
-        this.restartBtn = this.createButton(100, 30, 'btn-retry', () => {});
-        this.setupLongPress(this.restartBtn, () => {
-            console.log('Restart Long Press');
-            this.scene.scene.restart();
+        this.blockCountText = this.scene.add.text(100, 20, '0', {
+            fontFamily: '"VT323", monospace',
+            fontSize: '48px',
+            color: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 4,
         });
 
-        this.pauseBtn = this.createButton(160, 30, 'btn-pause', () => {
-            console.log('Pause Clicked');
-            // Toggle pause logic here
-        });
+        this.add([blockIcon, this.blockCountText]);
 
-        // --- Right Status ---
-
-        // Goal Icons Area
-        this.scene.add
-            .text(550, 30, '🏠', { fontSize: '24px' })
-            .setOrigin(0.5, 0.5);
-        // Icons will be created dynamically in update
-
-        // Block Count
-        this.scene.add
-            .text(700, 30, '🧱', { fontSize: '24px' })
-            .setOrigin(0.5, 0.5);
-        this.blockCountText = this.scene.add
-            .text(730, 30, '0', {
-                fontFamily: '"VT323", monospace',
-                fontSize: '32px',
-                color: '#ffffff',
-            })
-            .setOrigin(0.5, 0.5);
-        this.add(this.blockCountText);
+        // Pause Button
+        this.createPauseButton();
     }
 
-    private createButton(
-        x: number,
-        y: number,
-        texture: string,
-        onClick: () => void,
-    ): Phaser.GameObjects.Container {
-        const btn = this.scene.add.container(x, y);
+    private createPauseButton() {
+        this.pauseBtn = this.scene.add.container(750, 40);
 
-        // Button Shape (Blocky)
-        const bg = this.scene.add.rectangle(0, 0, 48, 48, 0xe0e0e0);
-        bg.setStrokeStyle(4, 0x4a4a4a);
+        const bg = this.scene.add.rectangle(0, 0, 60, 60, 0x333333);
+        bg.setStrokeStyle(2, 0xffffff);
 
-        // 3D effect (bottom border)
-        const shadow = this.scene.add
-            .rectangle(0, 24, 48, 4, 0x4a4a4a)
-            .setOrigin(0.5, 0);
+        const icon = this.scene.add.text(0, 0, '||', {
+            fontSize: '24px',
+            color: '#ffffff',
+            fontFamily: 'monospace'
+        }).setOrigin(0.5);
 
-        const icon = this.scene.add.image(0, 0, texture);
-        icon.setDisplaySize(32, 32);
+        this.pauseBtn.add([bg, icon]);
+        this.pauseBtn.setSize(60, 60);
+        this.pauseBtn.setInteractive({ useHandCursor: true });
 
-        btn.add([shadow, bg, icon]);
-        btn.setSize(48, 48);
-        btn.setInteractive({ useHandCursor: true });
-
-        // Click effect
-        btn.on('pointerdown', () => {
-            bg.y += 4;
-            icon.y += 4;
-            shadow.visible = false;
-        });
-
-        const resetBtn = () => {
-            bg.y = 0;
-            icon.y = 0;
-            shadow.visible = true;
-        };
-
-        btn.on('pointerup', () => {
-            resetBtn();
-            onClick();
-        });
-        btn.on('pointerout', resetBtn);
-
-        this.add(btn);
-        return btn;
-    }
-
-    private setupLongPress(
-        btn: Phaser.GameObjects.Container,
-        callback: () => void,
-    ) {
-        btn.off('pointerup'); // Remove default click handler if any (simplified)
-
-        // Re-implement pointerdown for long press
-        btn.on('pointerdown', () => {
+        this.pauseBtn.on('pointerdown', () => {
             // Visual feedback
-            (btn.list[1] as Phaser.GameObjects.Rectangle).setFillStyle(
-                0xffeb3b,
-            ); // Yellow
-
-            this.longPressTimer = this.scene.time.delayedCall(
-                this.LONG_PRESS_DURATION,
-                () => {
-                    callback();
-                    this.longPressTimer = undefined;
-                },
-            );
+            bg.setFillStyle(0x555555);
         });
 
-        const cancel = () => {
-            if (this.longPressTimer) {
-                this.longPressTimer.remove();
-                this.longPressTimer = undefined;
+        this.pauseBtn.on('pointerup', () => {
+            bg.setFillStyle(0x333333);
+            if (this.onPauseClick) {
+                this.onPauseClick();
             }
-            // Check if button is still valid before accessing children
-            if (btn.scene && btn.list && btn.list.length > 1) {
-                (btn.list[1] as Phaser.GameObjects.Rectangle).setFillStyle(
-                    0xe0e0e0,
-                ); // Reset color
-            }
-        };
+        });
 
-        btn.on('pointerup', cancel);
-        btn.on('pointerout', cancel);
+        this.pauseBtn.on('pointerout', () => {
+            bg.setFillStyle(0x333333);
+        });
+
+        this.add(this.pauseBtn);
     }
 
     private updateUI() {
@@ -174,15 +91,17 @@ export class HUD extends Phaser.GameObjects.Container {
                 icon.destroy();
             }
             this.goalIcons = [];
+
+            // Center the goal icons
+            const startX = 400 - (required * 40) / 2;
+
             for (let i = 0; i < required; i++) {
-                const icon = this.scene.add.rectangle(
-                    600 + i * 30,
-                    30,
-                    20,
-                    20,
-                    0x555555,
+                const icon = this.scene.add.image(
+                    startX + i * 40,
+                    40,
+                    'hud-goal-empty',
                 );
-                icon.setStrokeStyle(2, 0x222222);
+                icon.setDisplaySize(32, 32);
                 this.add(icon);
                 this.goalIcons.push(icon);
             }
@@ -191,9 +110,11 @@ export class HUD extends Phaser.GameObjects.Container {
         // Update status
         for (let i = 0; i < required; i++) {
             if (i < current) {
-                this.goalIcons[i].setFillStyle(0xffd700); // Gold
+                this.goalIcons[i].setTexture('hud-goal-full'); // Reached
+                // this.goalIcons[i].setTint(0xffd700); // Gold tint
             } else {
-                this.goalIcons[i].setFillStyle(0x555555);
+                this.goalIcons[i].setTexture('hud-goal-empty'); // Not reached
+                // this.goalIcons[i].setTint(0x888888); // Grey tint
             }
         }
     }

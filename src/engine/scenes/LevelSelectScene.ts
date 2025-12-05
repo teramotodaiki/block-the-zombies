@@ -33,8 +33,12 @@ export class LevelSelectScene extends Phaser.Scene {
             const x = startX + col * spacingX;
             const y = startY + row * spacingY;
 
-            this.createLevelButton(x, y, i + 1, () => {
-                this.scene.start('GameScene', { levelIndex: i });
+            const isUnlocked = levelManager.isLevelUnlocked(i);
+
+            this.createLevelButton(x, y, i + 1, isUnlocked, () => {
+                if (isUnlocked) {
+                    this.scene.start('GameScene', { levelIndex: i });
+                }
             });
         }
 
@@ -48,9 +52,9 @@ export class LevelSelectScene extends Phaser.Scene {
             startLevel: (levelIndex?: number) =>
                 this.scene.start('GameScene', { levelIndex: levelIndex ?? 0 }),
             goToTitle: () => this.scene.start('TitleScene'),
-            restartLevel: () => {},
-            forceGameOver: () => {},
-            forceLevelClear: () => {},
+            restartLevel: () => { },
+            forceGameOver: () => { },
+            forceLevelClear: () => { },
             getCurrentScene: () => 'LevelSelectScene',
         };
     }
@@ -59,49 +63,62 @@ export class LevelSelectScene extends Phaser.Scene {
         x: number,
         y: number,
         level: number,
+        isUnlocked: boolean,
         onClick: () => void,
     ) {
         const btn = this.add.container(x, y);
 
-        const bg = this.add.rectangle(0, 0, 100, 100, 0x4caf50);
-        bg.setStrokeStyle(4, 0x2e7d32);
-        const shadow = this.add.rectangle(0, 4, 100, 100, 0x000000, 0.5); // Simple shadow
+        // Colors based on state
+        const color = isUnlocked ? 0x4caf50 : 0x888888;
+        const strokeColor = isUnlocked ? 0x2e7d32 : 0x555555;
+        const shadowColor = 0x000000;
 
-        const text = this.add
-            .text(0, 0, level.toString(), {
-                fontSize: '48px',
-                color: '#ffffff',
-                fontStyle: 'bold',
-            })
-            .setOrigin(0.5);
+        const bg = this.add.rectangle(0, 0, 100, 100, color);
+        bg.setStrokeStyle(4, strokeColor);
+        const shadow = this.add.rectangle(0, 4, 100, 100, shadowColor, 0.5);
 
-        btn.add([shadow, bg, text]);
-        btn.setSize(100, 100);
-        btn.setInteractive({ useHandCursor: true });
+        btn.add(shadow);
+        btn.add(bg);
 
-        btn.on('pointerdown', () => {
-            bg.y += 4;
-            text.y += 4;
-            shadow.visible = false;
-        });
+        if (isUnlocked) {
+            const text = this.add
+                .text(0, 0, level.toString(), {
+                    fontSize: '48px',
+                    color: '#ffffff',
+                    fontStyle: 'bold',
+                })
+                .setOrigin(0.5);
+            btn.add(text);
 
-        btn.on('pointerup', () => {
-            bg.y = 0;
-            text.y = 0;
-            shadow.visible = true;
-            onClick();
-        });
+            // Interaction
+            btn.setSize(100, 100);
+            btn.setInteractive({ useHandCursor: true });
 
-        btn.on('pointerout', () => {
-            bg.y = 0;
-            text.y = 0;
-            shadow.visible = true;
-        });
+            btn.on('pointerdown', () => {
+                bg.y += 4;
+                text.y += 4;
+                shadow.visible = false;
+            });
 
-        // Assuming 'this.buttons' is meant to be defined elsewhere,
-        // or this line should be removed if not needed.
-        // For now, commenting it out to avoid compilation errors.
-        // this.buttons.push(btn);
+            btn.on('pointerup', () => {
+                bg.y = 0;
+                text.y = 0;
+                shadow.visible = true;
+                onClick();
+            });
+
+            btn.on('pointerout', () => {
+                bg.y = 0;
+                text.y = 0;
+                shadow.visible = true;
+            });
+        } else {
+            // Locked visual
+            const icon = this.add.image(0, 0, 'icon-lock');
+            icon.setDisplaySize(48, 48);
+            icon.setTint(0xdddddd);
+            btn.add(icon);
+        }
     }
 
     private createButton(

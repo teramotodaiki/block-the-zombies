@@ -23,6 +23,7 @@ export class Game {
     goalCount: number;
     isGameOver: boolean;
     isLevelCleared: boolean;
+    isPaused: boolean;
 
     constructor(config: LevelConfig) {
         // Deep copy config to prevent mutation of original level data
@@ -49,6 +50,7 @@ export class Game {
         this.goalCount = 0;
         this.isGameOver = false;
         this.isLevelCleared = false;
+        this.isPaused = false;
     }
 
     private cloneTiles(tiles: TileType[][]): TileType[][] {
@@ -56,7 +58,7 @@ export class Game {
     }
 
     update(delta: number) {
-        if (this.isGameOver || this.isLevelCleared) return;
+        if (this.isGameOver || this.isLevelCleared || this.isPaused) return;
 
         this.timeElapsed += delta; // delta in seconds
 

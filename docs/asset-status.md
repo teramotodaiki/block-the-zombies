@@ -24,4 +24,12 @@
 | **Goal (House)** | Sprite | ❌ Missing | Currently placeholder/icon |
 
 ## Missing / To Be Created
-- None currently identified as critical missing, but Magma is a placeholder.
+- **High Quality Icons/Tiles**: Current assets are placeholders or low-quality generated ones (non-transparent). Need proper pixel art with transparency for:
+    - icon_block
+    - icon_lock / icon_unlock (or hud_goal icons)
+    - tile_magma
+- **Pause Menu UI**: Currently relying on basic shapes.
+
+## TODO
+- [ ] Replace placeholder graphics with high-quality transparent PNGs.
+- [ ] Implement Pause Menu overlay with Resume/Home/Retry options.

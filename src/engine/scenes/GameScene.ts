@@ -11,7 +11,6 @@ export class GameScene extends Phaser.Scene {
     private gameCore!: Game;
     private gameRenderer!: Renderer;
     private overlayManager!: OverlayManager;
-    private inputManager!: InputManager;
     private hud!: HUD;
     private isGameEnded = false;
 
@@ -44,9 +43,25 @@ export class GameScene extends Phaser.Scene {
 
         this.gameCore = new Game(levelManager.getCurrentLevel());
         this.gameRenderer = new Renderer(this, this.gameCore);
-        this.inputManager = new InputManager(this, this.gameCore);
+        new InputManager(this, this.gameCore);
         this.hud = new HUD(this, this.gameCore);
         this.overlayManager = new OverlayManager(this);
+
+        this.hud.onPauseClick = () => {
+            this.gameCore.isPaused = true;
+            this.overlayManager.showPauseMenu(
+                () => { // Resume
+                    this.gameCore.isPaused = false;
+                    this.overlayManager.hide();
+                },
+                () => { // Retry
+                    this.scene.restart();
+                },
+                () => { // Home
+                    this.scene.start('TitleScene'); // Or LevelSelectScene? User said Home so Title or LevelSelect. Let's go Title for now or check spec. 通常ホームはLevelSelectかTitle。戻るボタンはTitleSceneへ行っていたのでTitleSceneにする。
+                }
+            );
+        };
 
         // Initial render
         this.gameRenderer.init();
@@ -102,12 +117,14 @@ export class GameScene extends Phaser.Scene {
         } else if (this.gameCore.isLevelCleared) {
             this.isGameEnded = true;
             this.overlayManager.showLevelClear(() => {
-                console.log('Go to Level Select');
-                // Unlock next level logic should be here (TBD in LevelManager)
-                // const levelManager = this.registry.get('levelManager') as LevelManager;
-                // For now, just advance the index so LevelSelect knows?
-                // Or LevelSelect should read progress.
-                // Let's just go to LevelSelectScene.
+                const levelManager = this.registry.get('levelManager') as LevelManager;
+                const nextIndex = levelManager.getCurrentLevelIndex() + 1;
+
+                // Unlock next level if it exists
+                if (nextIndex < levelManager.getLevelCount()) {
+                    levelManager.unlockLevel(nextIndex);
+                }
+
                 this.scene.start('LevelSelectScene');
             });
         }

@@ -36,12 +36,12 @@
 - GameScene
   - core 層のゲーム状態を管理し、毎フレーム更新する。
   - 上部 HUD に UI を表示（詳細は `/docs/ui-layout.md`）。
-  - ポーズ・リスタート・ホーム遷移などのイベントを受け付ける。
-
+  - ポーズボタンからオーバーレイメニュー（Resume/Retry/Home）を表示して制御する。
 
 - ClearOverlay
   - ステージクリア時に GameScene の上に乗るオーバーレイ。
-  - LevelSelectScene（レベル選択）へ遷移するボタンを持つ。
+  - LevelSelectScene（レベル選択）へ戻るボタンを持つ。
+  - 次のレベルは自動解放される。
 
 理由：
 - シーンを分割することで、UI や状態遷移の責務を分離し、

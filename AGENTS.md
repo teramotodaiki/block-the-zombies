@@ -62,3 +62,9 @@
 - Linter: Biome
 - Formatter: Biome
 - Framework: Phaser
+
+## Workbench
+
+ルートディレクトリにある `/workbench` ディレクトリは、ユーザーが用意した素材ファイルなどを置く場所です。そのままでは利用できないため、背景透過、トリミング、リサイズなどの編集をしてから public ディレクトリに移して利用してください。
+
+`/workbench` は gitignore されています。

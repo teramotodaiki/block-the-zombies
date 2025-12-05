@@ -3,17 +3,29 @@ import { TileType, type Vector2 } from './types';
 
 export class Grid {
     private tiles: TileType[][];
-    private width: number;
-    private height: number;
+    private _width: number;
+    private _height: number;
 
-    constructor(width: number, height: number, initialTiles?: TileType[][]) {
-        this.width = width;
-        this.height = height;
-        this.tiles =
-            initialTiles ||
-            Array.from({ length: height }, () =>
-                Array(width).fill(TileType.Empty),
-            );
+    constructor(width: number, height: number, tiles?: TileType[][]) {
+        this._width = width;
+        this._height = height;
+        if (tiles) {
+            this.tiles = tiles;
+        } else {
+            this.tiles = [];
+            for (let y = 0; y < height; y++) {
+                const row = new Array(width).fill(TileType.Empty);
+                this.tiles.push(row);
+            }
+        }
+    }
+
+    get width(): number {
+        return this._width;
+    }
+
+    get height(): number {
+        return this._height;
     }
 
     getTile(x: number, y: number): TileType {
