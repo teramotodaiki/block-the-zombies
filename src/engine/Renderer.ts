@@ -73,10 +73,8 @@ export class Renderer {
 
                             // Use Sprite instead of Image
                             this.goalSprite = this.scene.add.sprite(centerX, centerY, 'tile-goal');
-                            this.goalSprite.setOrigin(0.5, 0.85); // Anchor bottom, slightly offset up
-                            // Aspect ratio 704:384 ~ 1.83
-                            // Target width 140 -> Height ~76
-                            this.goalSprite.setDisplaySize(140, 76);
+                            this.goalSprite.setOrigin(0.5, 0.5); // Anchor bottom-ish
+                            this.goalSprite.setDisplaySize(120, 90);
                             this.tileGroup.add(this.goalSprite);
 
                             goalRendered = true;

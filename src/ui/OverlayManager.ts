@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 
 export class OverlayManager extends Phaser.GameObjects.Container {
     private overlay!: Phaser.GameObjects.Rectangle;
+    private messageImage!: Phaser.GameObjects.Image;
     private messageText!: Phaser.GameObjects.Text;
     private buttons: Phaser.GameObjects.Container[] = [];
 
@@ -28,7 +29,13 @@ export class OverlayManager extends Phaser.GameObjects.Container {
         this.overlay.setInteractive(); // Block input below
         this.add(this.overlay);
 
-        // Message Text
+        // Message Image (Center)
+        this.messageImage = this.scene.add.image(400, 200, ''); // Default placeholder
+        this.messageImage.setOrigin(0.5);
+        this.messageImage.setVisible(false);
+        this.add(this.messageImage);
+
+        // Message Text (Hidden by default)
         this.messageText = this.scene.add
             .text(400, 200, '', {
                 fontFamily: '"VT323", monospace',
@@ -38,13 +45,15 @@ export class OverlayManager extends Phaser.GameObjects.Container {
                 strokeThickness: 6,
             })
             .setOrigin(0.5);
+        this.messageText.setVisible(false);
         this.add(this.messageText);
     }
 
     showGameOver(onRetry: () => void, onHome: () => void) {
         this.reset();
-        this.messageText.setText('GAME OVER');
-        this.messageText.setColor('#ff4444');
+        this.messageImage.setTexture('ui-game-over');
+        this.messageImage.setVisible(true);
+        this.messageText.setVisible(false);
 
         // Retry Button
         this.createButton(300, 400, 'btn-retry', 0xffffff, onRetry);
@@ -56,9 +65,11 @@ export class OverlayManager extends Phaser.GameObjects.Container {
     }
 
     public showLevelClear(onNext: () => void) {
-        this.reset(); // Clear existing buttons and hide
+        this.reset();
         this.messageText.setText('LEVEL CLEAR!');
         this.messageText.setColor('#44ff44');
+        this.messageText.setVisible(true);
+        this.messageImage.setVisible(false); // Hide image if any
 
         // Next Level Button (Center)
         this.createButton(400, 350, 'btn-next', 0x4caf50, onNext);
@@ -111,8 +122,9 @@ export class OverlayManager extends Phaser.GameObjects.Container {
 
     public showPauseMenu(onResume: () => void, onRetry: () => void, onHome: () => void) {
         this.reset();
-        this.messageText.setText('PAUSED');
-        this.messageText.setColor('#ffffff');
+        // this.messageImage.setTexture('ui-paused');
+        this.messageImage.setVisible(false);
+        this.messageText.setVisible(false);
 
         // Resume Button
         this.createButton(400, 300, 'btn-play', 0x2196f3, onResume);
