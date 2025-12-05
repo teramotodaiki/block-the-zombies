@@ -86,7 +86,11 @@ export class Game {
 
     private updateVillagerSpawn(delta: number) {
         const spawn = this.levelConfig.villagerSpawn;
-        if (this.villagersSpawnedCount >= spawn.count) return;
+        // Infinite spawn: do not check count limit
+        // if (this.villagersSpawnedCount >= spawn.count) return;
+
+        // Limit concurrent villagers on screen
+        if (this.villagers.length >= 3) return;
 
         this.villagerSpawnTimer += delta * 1000; // Convert to ms
         if (this.villagerSpawnTimer >= spawn.interval) {
@@ -201,15 +205,8 @@ export class Game {
     }
 
     private checkGameOver() {
-        // If all villagers are dead/gone and goal not reached
-        if (
-            this.villagersSpawnedCount >=
-                this.levelConfig.villagerSpawn.count &&
-            this.villagers.length === 0 &&
-            !this.isLevelCleared
-        ) {
-            this.isGameOver = true;
-        }
+        // No Game Over logic per user request.
+        // Villagers spawn infinitely.
     }
 
     // Input handling

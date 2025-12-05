@@ -10,7 +10,7 @@ export class OverlayManager extends Phaser.GameObjects.Container {
         super(scene, 0, 0);
         this.scene.add.existing(this);
         this.setScrollFactor(0);
-        this.setDepth(100); // Ensure it's on top of HUD
+        this.setDepth(300); // Ensure it's on top of HUD (200)
         this.visible = false;
 
         this.createBackground();

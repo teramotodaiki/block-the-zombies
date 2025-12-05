@@ -155,6 +155,12 @@ export abstract class Entity {
 
         this.position.y = nextY;
         this.isGrounded = false;
+
+        // Check out of bounds (Bottom)
+        // If entity falls below the map, kill it to prevent memory leaks
+        if (this.position.y > grid.height * TILE_SIZE + 200) {
+            this.isDead = true;
+        }
     }
 }
 
