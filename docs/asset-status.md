@@ -3,15 +3,18 @@
 ## UI Assets
 | Asset Name | Type | Status | Notes |
 | :--- | :--- | :--- | :--- |
-| **Title Logo** | Image | ❌ Missing | Needs redesign |
-| **Home Icon** | UI Icon | ❌ Missing | Needs redesign |
-| **Retry Icon** | UI Icon | ❌ Missing | Needs redesign |
-| **Pause Icon** | UI Icon | ❌ Missing | Needs redesign |
-| **Next Icon** | UI Icon | ❌ Missing | Needs redesign |
-| **Block Icon** | UI Icon | ❌ Missing | For HUD inventory |
-| **Goal Icon** | UI Icon | ❌ Missing | For HUD progress |
-| **Lock Icon** | UI Icon | ❌ Missing | |
-| **Unlock Icon** | UI Icon | ❌ Missing | |
+| **Title Logo** | Image | ✅ Exists | `title_logo.png` |
+| **Level Clear Title** | Image | ✅ Implemented | `ui_level_clear.png` (Trophy) |
+| **Game Over Title** | Image | ✅ Implemented | `ui_game_over.png` (Skull) |
+| **Paused Title** | Image | - N/A | Removed per user request (Dark bg only) |
+| **Home Icon/Btn** | UI Icon | ✅ Exists | `btn_home.png` |
+| **Retry Icon/Btn** | UI Icon | ✅ Exists | `btn_retry.png` |
+| **Pause Icon/Btn** | UI Icon | ✅ Exists | `btn_pause.png` |
+| **Next Icon/Btn** | UI Icon | ✅ Exists | `btn_next.png` |
+| **Block Icon** | UI Icon | ✅ Exists | `icon_block.png` |
+| **Goal Icon** | UI Icon | ✅ Exists | (For HUD, partially checking logic) |
+| **Lock Icon** | UI Icon | ✅ Exists | `icon_lock.png` |
+| **Unlock Icon** | UI Icon | ✅ Exists | `icon_unlock.png` |
 
 ## Game Assets
 | Asset Name | Type | Status | Notes |
@@ -20,16 +23,15 @@
 | **Zombie** | Sprite (Anim) | ✅ Implemented | Walking animation (4 frames) |
 | **Ground Tile** | Tile | ✅ Implemented | Grass/Dirt block |
 | **Bedrock Tile** | Tile | ✅ Implemented | Indestructible block |
-| **Magma Tile** | Tile | ❌ Missing | Currently placeholder |
-| **Goal (House)** | Sprite | ❌ Missing | Currently placeholder/icon |
+| **Magma Tile** | Tile | ✅ Implemented | AI Generated Magma |
+| **Goal (House)** | Sprite | ✅ Implemented | 4-frame animation (0-3 lights) |
 
 ## Missing / To Be Created
-- **High Quality Icons/Tiles**: Current assets are placeholders or low-quality generated ones (non-transparent). Need proper pixel art with transparency for:
-    - icon_block
-    - icon_lock / icon_unlock (or hud_goal icons)
-    - tile_magma
-- **Pause Menu UI**: Currently relying on basic shapes.
+- **High Quality Icons/Tiles**: Verify `icon_block` etc. are transparent and look good.
+- **Sound Effects (SE)**: No info on SE yet.
+- **BGM**: No info on BGM yet.
 
 ## TODO
-- [ ] Replace placeholder graphics with high-quality transparent PNGs.
-- [ ] Implement Pause Menu overlay with Resume/Home/Retry options.
+- [ ] Implement Audio (SE/BGM)
+- [ ] Verify UI icon consistency (pixel art style)
+- [ ] Create more levels (Tutorial, Easy 2, etc.)
