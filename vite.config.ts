@@ -7,4 +7,8 @@ export default defineConfig({
         globals: true,
         exclude: ['**/node_modules/**', '**/dist/**', '**/e2e/**'],
     },
+    server: {
+        cors: true,
+        host: true,
+    },
 });
