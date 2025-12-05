@@ -5,6 +5,8 @@ export class HUD extends Phaser.GameObjects.Container {
     private gameCore: Game;
     private blockCountText!: Phaser.GameObjects.Text;
     private pauseBtn!: Phaser.GameObjects.Image;
+    private homeBtn!: Phaser.GameObjects.Image;
+    private retryBtn!: Phaser.GameObjects.Image;
 
     public onPauseClick?: () => void;
     public onHomeClick?: () => void;
@@ -49,12 +51,12 @@ export class HUD extends Phaser.GameObjects.Container {
         const spacing = 70;
 
         // Home Button
-        this.createButton(startX - spacing, y, 'btn-home', () => {
+        this.homeBtn = this.createButton(startX - spacing, y, 'btn-home', () => {
             if (this.onHomeClick) this.onHomeClick();
         });
 
         // Retry Button
-        this.createButton(startX, y, 'btn-retry', () => {
+        this.retryBtn = this.createButton(startX, y, 'btn-retry', () => {
             if (this.onRetryClick) this.onRetryClick();
         });
 
@@ -71,12 +73,14 @@ export class HUD extends Phaser.GameObjects.Container {
         btn.setInteractive({ useHandCursor: true });
 
         btn.on('pointerdown', () => {
-            btn.setTint(0xcccccc);
+            if (btn.input?.enabled) btn.setTint(0xcccccc);
         });
 
         btn.on('pointerup', () => {
-            btn.clearTint();
-            callback();
+            if (btn.input?.enabled) {
+                btn.clearTint();
+                callback();
+            }
         });
 
         btn.on('pointerout', () => {
@@ -98,8 +102,20 @@ export class HUD extends Phaser.GameObjects.Container {
         // Update Pause Button Texture
         if (this.gameCore.isPaused) {
             this.pauseBtn.setTexture('btn-play');
+
+            // Enable Home/Retry
+            this.homeBtn.setAlpha(1);
+            this.retryBtn.setAlpha(1);
+            if (this.homeBtn.input) this.homeBtn.input.enabled = true;
+            if (this.retryBtn.input) this.retryBtn.input.enabled = true;
         } else {
             this.pauseBtn.setTexture('btn-pause');
+
+            // Disable Home/Retry
+            this.homeBtn.setAlpha(0.5);
+            this.retryBtn.setAlpha(0.5);
+            if (this.homeBtn.input) this.homeBtn.input.enabled = false;
+            if (this.retryBtn.input) this.retryBtn.input.enabled = false;
         }
         this.pauseBtn.setDisplaySize(48, 48);
     }
