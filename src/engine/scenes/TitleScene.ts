@@ -35,7 +35,15 @@ export class TitleScene extends Phaser.Scene {
     }
 
     update() {
-        if (!this.isVideoScaled && this.video && this.video.width > 0) {
+        // Wait for video metadata to load
+        // Phaser video width might default to 256 before loading
+        if (
+            !this.isVideoScaled &&
+            this.video &&
+            this.video.video &&
+            this.video.video.readyState >= 1 &&
+            this.video.width > 256
+        ) {
             const width = this.cameras.main.width;
             // Scale to fit width (letterbox)
             const scale = width / this.video.width;
