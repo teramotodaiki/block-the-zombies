@@ -5,18 +5,17 @@ export class TitleScene extends Phaser.Scene {
         super('TitleScene');
     }
 
+    private video?: Phaser.GameObjects.Video;
+    private isVideoScaled = false;
+
     create() {
         // Video Background
         const width = this.cameras.main.width;
         const height = this.cameras.main.height;
 
-        const video = this.add.video(width / 2, height / 2, 'title-bg');
-        video.play(true); // Loop
-        video.setPaused(false);
-
-        // Scale to fit width (letterbox)
-        const scale = width / video.width;
-        video.setScale(scale);
+        this.video = this.add.video(width / 2, height / 2, 'title-bg');
+        this.video.play(true); // Loop
+        this.video.setPaused(false);
 
         // Tap anywhere to start
         this.input.on('pointerdown', () => {
@@ -33,5 +32,15 @@ export class TitleScene extends Phaser.Scene {
             forceLevelClear: () => { },
             getCurrentScene: () => 'TitleScene',
         };
+    }
+
+    update() {
+        if (!this.isVideoScaled && this.video && this.video.width > 0) {
+            const width = this.cameras.main.width;
+            // Scale to fit width (letterbox)
+            const scale = width / this.video.width;
+            this.video.setScale(scale);
+            this.isVideoScaled = true;
+        }
     }
 }
