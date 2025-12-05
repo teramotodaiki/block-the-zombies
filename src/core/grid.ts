@@ -9,7 +9,11 @@ export class Grid {
     constructor(width: number, height: number, initialTiles?: TileType[][]) {
         this.width = width;
         this.height = height;
-        this.tiles = initialTiles || Array.from({ length: height }, () => Array(width).fill(TileType.Empty));
+        this.tiles =
+            initialTiles ||
+            Array.from({ length: height }, () =>
+                Array(width).fill(TileType.Empty),
+            );
     }
 
     getTile(x: number, y: number): TileType {

@@ -1,5 +1,5 @@
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 import sharp from 'sharp';
 
 const WORKBENCH_DIR = 'workbench';
@@ -56,7 +56,10 @@ async function processAssets() {
                 });
             } else if (file === 'title_logo.png') {
                 // Special handling for title: limit width to 600
-                pipeline = pipeline.resize({ width: 600, withoutEnlargement: true });
+                pipeline = pipeline.resize({
+                    width: 600,
+                    withoutEnlargement: true,
+                });
             }
 
             await pipeline.toFile(outputPath);

@@ -17,7 +17,14 @@ export class OverlayManager extends Phaser.GameObjects.Container {
 
     private createBackground() {
         // Full screen semi-transparent black
-        this.overlay = this.scene.add.rectangle(400, 300, 800, 600, 0x000000, 0.7);
+        this.overlay = this.scene.add.rectangle(
+            400,
+            300,
+            800,
+            600,
+            0x000000,
+            0.7,
+        );
         this.overlay.setInteractive(); // Block input below
         this.add(this.overlay);
 
@@ -59,13 +66,21 @@ export class OverlayManager extends Phaser.GameObjects.Container {
         this.show();
     }
 
-    private createButton(x: number, y: number, texture: string, color: number, onClick: () => void) {
+    private createButton(
+        x: number,
+        y: number,
+        texture: string,
+        _color: number,
+        onClick: () => void,
+    ) {
         const btn = this.scene.add.container(x, y);
 
         const bg = this.scene.add.rectangle(0, 0, 80, 80, 0xe0e0e0);
         bg.setStrokeStyle(4, 0x4a4a4a);
 
-        const shadow = this.scene.add.rectangle(0, 40, 80, 6, 0x4a4a4a).setOrigin(0.5, 0);
+        const shadow = this.scene.add
+            .rectangle(0, 40, 80, 6, 0x4a4a4a)
+            .setOrigin(0.5, 0);
 
         const icon = this.scene.add.image(0, 0, texture);
         icon.setDisplaySize(48, 48);
@@ -97,7 +112,9 @@ export class OverlayManager extends Phaser.GameObjects.Container {
     }
 
     private reset() {
-        this.buttons.forEach((btn) => btn.destroy());
+        for (const btn of this.buttons) {
+            btn.destroy();
+        }
         this.buttons = [];
     }
 

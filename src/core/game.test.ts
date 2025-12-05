@@ -31,6 +31,9 @@ describe('Game', () => {
 
     it('should place blocks', () => {
         const game = new Game(mockLevel);
+        // Setup a solid block neighbor
+        game.grid.setTile(5, 6, TileType.Ground);
+
         const success = game.toggleBlock(5, 5);
         expect(success).toBe(true);
         expect(game.grid.getTile(5, 5)).toBe(TileType.Ground);
@@ -38,6 +41,9 @@ describe('Game', () => {
 
     it('should remove blocks', () => {
         const game = new Game(mockLevel);
+        // Setup a solid block neighbor
+        game.grid.setTile(5, 6, TileType.Ground);
+
         game.toggleBlock(5, 5); // Place
         const success = game.toggleBlock(5, 5); // Remove
         expect(success).toBe(true);

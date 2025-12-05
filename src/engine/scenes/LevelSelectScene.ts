@@ -45,7 +45,8 @@ export class LevelSelectScene extends Phaser.Scene {
 
         // Expose Debug API
         window.gameDebug = {
-            startLevel: (levelIndex?: number) => this.scene.start('GameScene', { levelIndex: levelIndex ?? 0 }),
+            startLevel: (levelIndex?: number) =>
+                this.scene.start('GameScene', { levelIndex: levelIndex ?? 0 }),
             goToTitle: () => this.scene.start('TitleScene'),
             restartLevel: () => {},
             forceGameOver: () => {},
@@ -54,7 +55,12 @@ export class LevelSelectScene extends Phaser.Scene {
         };
     }
 
-    private createLevelButton(x: number, y: number, level: number, onClick: () => void) {
+    private createLevelButton(
+        x: number,
+        y: number,
+        level: number,
+        onClick: () => void,
+    ) {
         const btn = this.add.container(x, y);
 
         const bg = this.add.rectangle(0, 0, 100, 100, 0x4caf50);
@@ -98,12 +104,19 @@ export class LevelSelectScene extends Phaser.Scene {
         // this.buttons.push(btn);
     }
 
-    private createButton(x: number, y: number, texture: string, onClick: () => void) {
+    private createButton(
+        x: number,
+        y: number,
+        texture: string,
+        onClick: () => void,
+    ) {
         const btn = this.add.container(x, y);
 
         const bg = this.add.rectangle(0, 0, 64, 64, 0xe0e0e0);
         bg.setStrokeStyle(4, 0x4a4a4a);
-        const shadow = this.add.rectangle(0, 32, 64, 4, 0x4a4a4a).setOrigin(0.5, 0);
+        const shadow = this.add
+            .rectangle(0, 32, 64, 4, 0x4a4a4a)
+            .setOrigin(0.5, 0);
 
         const icon = this.add.image(0, 0, texture);
         icon.setDisplaySize(48, 48);

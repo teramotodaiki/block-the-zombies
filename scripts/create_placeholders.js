@@ -1,5 +1,5 @@
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 import sharp from 'sharp';
 
 const OUTPUT_DIR = 'public/assets/game';
@@ -10,12 +10,42 @@ async function createPlaceholders() {
     }
 
     const assets = [
-        { name: 'villager.png', width: 32, height: 96, color: { r: 0, g: 0, b: 255, alpha: 1 } }, // Blue
-        { name: 'zombie.png', width: 32, height: 96, color: { r: 0, g: 255, b: 0, alpha: 1 } }, // Green
-        { name: 'btn_next.png', width: 80, height: 80, color: { r: 100, g: 100, b: 100, alpha: 1 } },
-        { name: 'btn_pause.png', width: 48, height: 48, color: { r: 200, g: 200, b: 200, alpha: 1 } },
-        { name: 'icon_lock.png', width: 64, height: 64, color: { r: 50, g: 50, b: 50, alpha: 1 } },
-        { name: 'icon_unlock.png', width: 64, height: 64, color: { r: 50, g: 200, b: 50, alpha: 1 } },
+        {
+            name: 'villager.png',
+            width: 32,
+            height: 96,
+            color: { r: 0, g: 0, b: 255, alpha: 1 },
+        }, // Blue
+        {
+            name: 'zombie.png',
+            width: 32,
+            height: 96,
+            color: { r: 0, g: 255, b: 0, alpha: 1 },
+        }, // Green
+        {
+            name: 'btn_next.png',
+            width: 80,
+            height: 80,
+            color: { r: 100, g: 100, b: 100, alpha: 1 },
+        },
+        {
+            name: 'btn_pause.png',
+            width: 48,
+            height: 48,
+            color: { r: 200, g: 200, b: 200, alpha: 1 },
+        },
+        {
+            name: 'icon_lock.png',
+            width: 64,
+            height: 64,
+            color: { r: 50, g: 50, b: 50, alpha: 1 },
+        },
+        {
+            name: 'icon_unlock.png',
+            width: 64,
+            height: 64,
+            color: { r: 50, g: 200, b: 50, alpha: 1 },
+        },
     ];
 
     for (const asset of assets) {

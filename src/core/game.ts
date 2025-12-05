@@ -22,7 +22,11 @@ export class Game {
 
     constructor(config: LevelConfig) {
         this.levelConfig = config;
-        this.grid = new Grid(config.width, config.height, this.cloneTiles(config.tiles));
+        this.grid = new Grid(
+            config.width,
+            config.height,
+            this.cloneTiles(config.tiles),
+        );
         this.entities = [];
         this.villagers = [];
         this.zombies = [];
@@ -122,7 +126,10 @@ export class Game {
 
         // Magma check
         for (const entity of this.entities) {
-            const gridPos = this.grid.toGrid(entity.position.x, entity.position.y);
+            const gridPos = this.grid.toGrid(
+                entity.position.x,
+                entity.position.y,
+            );
             if (this.grid.getTile(gridPos.x, gridPos.y) === TileType.Magma) {
                 entity.isDead = true;
             }
@@ -175,7 +182,8 @@ export class Game {
     private checkGameOver() {
         // If all villagers are dead/gone and goal not reached
         if (
-            this.villagersSpawnedCount >= this.levelConfig.villagerSpawn.count &&
+            this.villagersSpawnedCount >=
+                this.levelConfig.villagerSpawn.count &&
             this.villagers.length === 0 &&
             !this.isLevelCleared
         ) {
@@ -200,16 +208,34 @@ export class Game {
 
         if (currentTile === TileType.Empty) {
             // Place
-            // Check rules: adjacent to solid, max blocks, etc.
-            // For now, just place
-            this.grid.setTile(gridX, gridY, TileType.Ground);
-            return true;
+            // Check rules: adjacent to solid
+            if (this.hasSolidNeighbor(gridX, gridY)) {
+                this.grid.setTile(gridX, gridY, TileType.Ground);
+                return true;
+            }
+            return false;
         } else if (currentTile === TileType.Ground) {
             // Break
             this.grid.setTile(gridX, gridY, TileType.Empty);
             return true;
         }
 
+        return false;
+    }
+
+    private hasSolidNeighbor(x: number, y: number): boolean {
+        const neighbors = [
+            { x: x, y: y - 1 }, // Top
+            { x: x, y: y + 1 }, // Bottom
+            { x: x - 1, y: y }, // Left
+            { x: x + 1, y: y }, // Right
+        ];
+
+        for (const n of neighbors) {
+            if (this.grid.isValid(n.x, n.y) && this.grid.isSolid(n.x, n.y)) {
+                return true;
+            }
+        }
         return false;
     }
 }

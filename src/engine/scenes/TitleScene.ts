@@ -9,7 +9,11 @@ export class TitleScene extends Phaser.Scene {
         this.cameras.main.setBackgroundColor('#87CEEB');
 
         // Title Logo
-        const logo = this.add.image(this.cameras.main.centerX, 200, 'title-logo');
+        const logo = this.add.image(
+            this.cameras.main.centerX,
+            200,
+            'title-logo',
+        );
         logo.setOrigin(0.5);
         // Logo is 1024x1024, scale it down to fit width
         const targetWidth = 600;
@@ -23,7 +27,8 @@ export class TitleScene extends Phaser.Scene {
 
         // Expose Debug API
         window.gameDebug = {
-            startLevel: (levelIndex?: number) => this.scene.start('GameScene', { levelIndex: levelIndex ?? 0 }),
+            startLevel: (levelIndex?: number) =>
+                this.scene.start('GameScene', { levelIndex: levelIndex ?? 0 }),
             goToTitle: () => this.scene.start('TitleScene'),
             restartLevel: () => {},
             forceGameOver: () => {},

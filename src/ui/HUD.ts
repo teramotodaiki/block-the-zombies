@@ -53,11 +53,15 @@ export class HUD extends Phaser.GameObjects.Container {
         // --- Right Status ---
 
         // Goal Icons Area
-        this.scene.add.text(550, 30, '🏠', { fontSize: '24px' }).setOrigin(0.5, 0.5);
+        this.scene.add
+            .text(550, 30, '🏠', { fontSize: '24px' })
+            .setOrigin(0.5, 0.5);
         // Icons will be created dynamically in update
 
         // Block Count
-        this.scene.add.text(700, 30, '🧱', { fontSize: '24px' }).setOrigin(0.5, 0.5);
+        this.scene.add
+            .text(700, 30, '🧱', { fontSize: '24px' })
+            .setOrigin(0.5, 0.5);
         this.blockCountText = this.scene.add
             .text(730, 30, '0', {
                 fontFamily: '"VT323", monospace',
@@ -68,7 +72,12 @@ export class HUD extends Phaser.GameObjects.Container {
         this.add(this.blockCountText);
     }
 
-    private createButton(x: number, y: number, texture: string, onClick: () => void): Phaser.GameObjects.Container {
+    private createButton(
+        x: number,
+        y: number,
+        texture: string,
+        onClick: () => void,
+    ): Phaser.GameObjects.Container {
         const btn = this.scene.add.container(x, y);
 
         // Button Shape (Blocky)
@@ -76,7 +85,9 @@ export class HUD extends Phaser.GameObjects.Container {
         bg.setStrokeStyle(4, 0x4a4a4a);
 
         // 3D effect (bottom border)
-        const shadow = this.scene.add.rectangle(0, 24, 48, 4, 0x4a4a4a).setOrigin(0.5, 0);
+        const shadow = this.scene.add
+            .rectangle(0, 24, 48, 4, 0x4a4a4a)
+            .setOrigin(0.5, 0);
 
         const icon = this.scene.add.image(0, 0, texture);
         icon.setDisplaySize(32, 32);
@@ -108,18 +119,26 @@ export class HUD extends Phaser.GameObjects.Container {
         return btn;
     }
 
-    private setupLongPress(btn: Phaser.GameObjects.Container, callback: () => void) {
+    private setupLongPress(
+        btn: Phaser.GameObjects.Container,
+        callback: () => void,
+    ) {
         btn.off('pointerup'); // Remove default click handler if any (simplified)
 
         // Re-implement pointerdown for long press
         btn.on('pointerdown', () => {
             // Visual feedback
-            (btn.list[1] as Phaser.GameObjects.Rectangle).setFillStyle(0xffeb3b); // Yellow
+            (btn.list[1] as Phaser.GameObjects.Rectangle).setFillStyle(
+                0xffeb3b,
+            ); // Yellow
 
-            this.longPressTimer = this.scene.time.delayedCall(this.LONG_PRESS_DURATION, () => {
-                callback();
-                this.longPressTimer = undefined;
-            });
+            this.longPressTimer = this.scene.time.delayedCall(
+                this.LONG_PRESS_DURATION,
+                () => {
+                    callback();
+                    this.longPressTimer = undefined;
+                },
+            );
         });
 
         const cancel = () => {
@@ -129,7 +148,9 @@ export class HUD extends Phaser.GameObjects.Container {
             }
             // Check if button is still valid before accessing children
             if (btn.scene && btn.list && btn.list.length > 1) {
-                (btn.list[1] as Phaser.GameObjects.Rectangle).setFillStyle(0xe0e0e0); // Reset color
+                (btn.list[1] as Phaser.GameObjects.Rectangle).setFillStyle(
+                    0xe0e0e0,
+                ); // Reset color
             }
         };
 
@@ -149,10 +170,18 @@ export class HUD extends Phaser.GameObjects.Container {
 
         // Init icons if needed
         if (this.goalIcons.length !== required) {
-            this.goalIcons.forEach((icon) => icon.destroy());
+            for (const icon of this.goalIcons) {
+                icon.destroy();
+            }
             this.goalIcons = [];
             for (let i = 0; i < required; i++) {
-                const icon = this.scene.add.rectangle(600 + i * 30, 30, 20, 20, 0x555555);
+                const icon = this.scene.add.rectangle(
+                    600 + i * 30,
+                    30,
+                    20,
+                    20,
+                    0x555555,
+                );
                 icon.setStrokeStyle(2, 0x222222);
                 this.add(icon);
                 this.goalIcons.push(icon);

@@ -1,5 +1,3 @@
-import fs from 'fs';
-import path from 'path';
 import sharp from 'sharp';
 
 const TARGET_FRAME_WIDTH = 64; // Doubled from 32
@@ -32,7 +30,9 @@ async function process() {
         console.log(`Processing ${config.input}...`);
 
         const image = sharp(config.input).ensureAlpha();
-        const { data, info } = await image.raw().toBuffer({ resolveWithObject: true });
+        const { data, info } = await image
+            .raw()
+            .toBuffer({ resolveWithObject: true });
 
         // Pixel manipulation for background removal
         for (let i = 0; i < data.length; i += 4) {
@@ -42,7 +42,9 @@ async function process() {
 
             // Check against bg colors
             for (const bg of config.bgColors) {
-                const dist = Math.sqrt((r - bg.r) ** 2 + (g - bg.g) ** 2 + (b - bg.b) ** 2);
+                const dist = Math.sqrt(
+                    (r - bg.r) ** 2 + (g - bg.g) ** 2 + (b - bg.b) ** 2,
+                );
 
                 if (dist < config.tolerance) {
                     data[i + 3] = 0; // Alpha = 0
@@ -77,10 +79,14 @@ async function process() {
         // But the user specifically asked to keep aspect ratio.
         // So we use 'contain' with a transparent background.
 
-        pipeline = pipeline.resize(TARGET_FRAME_WIDTH * FRAMES, TARGET_FRAME_HEIGHT, {
-            fit: 'contain',
-            background: { r: 0, g: 0, b: 0, alpha: 0 },
-        });
+        pipeline = pipeline.resize(
+            TARGET_FRAME_WIDTH * FRAMES,
+            TARGET_FRAME_HEIGHT,
+            {
+                fit: 'contain',
+                background: { r: 0, g: 0, b: 0, alpha: 0 },
+            },
+        );
 
         await pipeline.toFile(config.output);
         console.log(`  -> Saved to ${config.output}`);

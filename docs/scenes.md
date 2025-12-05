@@ -7,8 +7,7 @@
 3. WorldSelectScene（バイオーム選択）
 4. LevelSelectScene（レベル選択）
 5. GameScene（ゲーム本編）
-6. PauseOverlay（ポーズ UI オーバーレイ）
-7. ClearOverlay（クリア UI オーバーレイ）
+6. ClearOverlay（クリア UI オーバーレイ）
 
 シーン名は仮称。実際のクラス名・ファイル名は未定。
 
@@ -39,9 +38,6 @@
   - 上部 HUD に UI を表示（詳細は `/docs/ui-layout.md`）。
   - ポーズ・リスタート・ホーム遷移などのイベントを受け付ける。
 
-- PauseOverlay
-  - GameScene の上に乗るオーバーレイ。
-  - 再開／リスタート／タイトルなどへのボタンを持つ（テキストなし）。
 
 - ClearOverlay
   - ステージクリア時に GameScene の上に乗るオーバーレイ。

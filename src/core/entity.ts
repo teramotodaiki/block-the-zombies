@@ -30,7 +30,6 @@ export abstract class Entity {
 
     protected moveX(delta: number, grid: Grid) {
         const nextX = this.position.x + this.velocity.x * delta;
-        const topY = this.position.y - this.height; // Top is y - height (since y is bottom center? No, y is center? Let's check constructor)
         // Constructor: this.position = { x, y };
         // moveY logic: this.position.y = tileY * TILE_SIZE - this.height / 2;
         // This implies position.y is the CENTER of the entity.
@@ -41,45 +40,81 @@ export abstract class Entity {
         const bottomEdge = this.position.y + this.height / 2 - 0.1; // Epsilon to avoid checking tile below when standing exactly on it
 
         // Check horizontal collision
+        let collision = false;
+        let wallTileX = -1;
+        let wallTileY = -1;
+
         if (this.velocity.x > 0) {
             const rightEdge = nextX + this.width / 2;
             const tileX = Math.floor(rightEdge / TILE_SIZE);
-
-            // Check all vertical tiles occupied by the entity
             const startTileY = Math.floor(topEdge / TILE_SIZE);
             const endTileY = Math.floor(bottomEdge / TILE_SIZE);
 
-            let collision = false;
             for (let ty = startTileY; ty <= endTileY; ty++) {
                 if (grid.isSolid(tileX, ty)) {
                     collision = true;
+                    wallTileX = tileX;
+                    wallTileY = ty;
                     break;
                 }
-            }
-
-            if (collision) {
-                this.velocity.x *= -1;
-                return;
             }
         } else if (this.velocity.x < 0) {
             const leftEdge = nextX - this.width / 2;
             const tileX = Math.floor(leftEdge / TILE_SIZE);
-
             const startTileY = Math.floor(topEdge / TILE_SIZE);
             const endTileY = Math.floor(bottomEdge / TILE_SIZE);
 
-            let collision = false;
             for (let ty = startTileY; ty <= endTileY; ty++) {
                 if (grid.isSolid(tileX, ty)) {
                     collision = true;
+                    wallTileX = tileX;
+                    wallTileY = ty;
                     break;
                 }
             }
+        }
 
-            if (collision) {
-                this.velocity.x *= -1;
-                return;
+        if (collision) {
+            // Climbing Logic (Only for Villager, but implemented in Entity for now or check instance)
+            // Ideally Entity should have a flag 'canClimb' or similar.
+            // For now, let's check if we can climb.
+            // We can climb if:
+            // 1. The wall is exactly 1 tile high relative to our feet.
+            // 2. The tile ABOVE the wall is empty.
+            // 3. We are grounded.
+
+            if (this.isGrounded) {
+                // Check if the collision is at foot level
+                const footTileY = Math.floor(
+                    (this.position.y + this.height / 2 - 0.1) / TILE_SIZE,
+                );
+
+                // If the wall we hit is at foot level
+                if (wallTileY === footTileY) {
+                    // Check tile above the wall
+                    // Also check tile above our head (to ensure we don't bump head when climbing)
+                    // Actually, we just need to check if (wallTileX, wallTileY - 1) is not solid.
+                    if (!grid.isSolid(wallTileX, wallTileY - 1)) {
+                        // Climb!
+                        // Snap to top of the wall tile
+                        this.position.y =
+                            wallTileY * TILE_SIZE - this.height / 2;
+                        // Move forward slightly to be on the tile?
+                        // Or just let the next frame handle movement.
+                        // If we just change Y, we are now overlapping the wall horizontally?
+                        // No, we are 'on top' of it.
+                        // But our X is still 'before' the wall.
+                        // We need to advance X as well, or just let the loop continue?
+                        // If we change Y, we are no longer colliding with the wall at (wallTileX, wallTileY).
+                        // So we can proceed.
+                        this.position.x = nextX;
+                        return;
+                    }
+                }
             }
+
+            this.velocity.x *= -1;
+            return;
         }
 
         this.position.x = nextX;

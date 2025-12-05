@@ -12,7 +12,10 @@ export class InputManager {
         this.scene.input.on('pointerdown', this.onPointerDown, this);
     }
 
-    private onPointerDown(pointer: Phaser.Input.Pointer, currentlyOver: Phaser.GameObjects.GameObject[]) {
+    private onPointerDown(
+        pointer: Phaser.Input.Pointer,
+        currentlyOver: Phaser.GameObjects.GameObject[],
+    ) {
         if (currentlyOver.length > 0) return;
 
         // Convert screen to world (if camera is used)

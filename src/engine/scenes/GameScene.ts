@@ -1,8 +1,7 @@
 import Phaser from 'phaser';
 import { Game } from '../../core/game';
-import { LEVELS, type LevelConfig } from '../../core/level';
+import { LEVELS } from '../../core/level';
 import { LevelManager } from '../../core/level-manager';
-import { TileType } from '../../core/types';
 import { HUD } from '../../ui/HUD';
 import { OverlayManager } from '../../ui/OverlayManager';
 import { InputManager } from '../InputManager';
@@ -11,9 +10,6 @@ import { Renderer } from '../Renderer';
 export class GameScene extends Phaser.Scene {
     private gameCore!: Game;
     private gameRenderer!: Renderer;
-    // @ts-expect-error
-    private inputManager!: InputManager;
-    private hud!: HUD;
     private overlayManager!: OverlayManager;
     private isGameEnded = false;
 
@@ -22,7 +18,7 @@ export class GameScene extends Phaser.Scene {
     }
 
     create(data: { levelIndex?: number }) {
-        const levelIndex = data.levelIndex ?? 0;
+        const _levelIndex = data.levelIndex ?? 0;
         // Ideally LevelManager is a singleton or passed from previous scene.
         // For now, let's instantiate it here or get from registry?
         // Better: Pass LevelManager instance? No, data must be serializable.
@@ -62,7 +58,9 @@ export class GameScene extends Phaser.Scene {
         window.gameDebug = {
             startLevel: (levelIndex?: number) => {
                 const idx = levelIndex ?? 0;
-                const levelManager = this.registry.get('levelManager') as LevelManager;
+                const levelManager = this.registry.get(
+                    'levelManager',
+                ) as LevelManager;
                 if (levelManager) {
                     levelManager.setLevel(idx);
                 }
@@ -104,7 +102,9 @@ export class GameScene extends Phaser.Scene {
             this.isGameEnded = true;
             this.overlayManager.showLevelClear(() => {
                 console.log('Next Level');
-                const levelManager = this.registry.get('levelManager') as LevelManager;
+                const levelManager = this.registry.get(
+                    'levelManager',
+                ) as LevelManager;
                 if (levelManager.hasNextLevel()) {
                     levelManager.nextLevel();
                     this.scene.restart({ levelIndex: undefined }); // Use current index from manager

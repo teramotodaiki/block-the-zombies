@@ -1,5 +1,5 @@
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 import sharp from 'sharp';
 
 const INPUT_FILE = 'workbench/tiles_source.png';
@@ -12,13 +12,17 @@ async function slice() {
         fs.mkdirSync(OUTPUT_DIR, { recursive: true });
     }
 
-    console.log(`Slicing ${INPUT_FILE} into ${GRID_SIZE}x${GRID_SIZE} tiles...`);
+    console.log(
+        `Slicing ${INPUT_FILE} into ${GRID_SIZE}x${GRID_SIZE} tiles...`,
+    );
 
     const image = sharp(INPUT_FILE);
     const metadata = await image.metadata();
 
     if (metadata.width !== 1024 || metadata.height !== 1024) {
-        console.error(`Unexpected image size: ${metadata.width}x${metadata.height}. Expected 1024x1024.`);
+        console.error(
+            `Unexpected image size: ${metadata.width}x${metadata.height}. Expected 1024x1024.`,
+        );
         return;
     }
 
@@ -29,7 +33,10 @@ async function slice() {
             const top = y * TILE_SIZE;
             const outputFile = path.join(OUTPUT_DIR, `tile_${y}_${x}.png`);
 
-            await image.clone().extract({ left, top, width: TILE_SIZE, height: TILE_SIZE }).toFile(outputFile);
+            await image
+                .clone()
+                .extract({ left, top, width: TILE_SIZE, height: TILE_SIZE })
+                .toFile(outputFile);
 
             count++;
         }

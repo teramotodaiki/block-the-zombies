@@ -1,26 +1,27 @@
 # Asset Status List
 
 ## UI Assets
-| Asset Name | Filename | Status | Notes |
+| Asset Name | Type | Status | Notes |
 | :--- | :--- | :--- | :--- |
-| Title Logo | `title_logo.png` | **Implemented** | Scaled in code. |
-| Play Button | `btn_play.png` | **Implemented** | To be removed (Tap anywhere). |
-| Home Button | `btn_home.png` | **Implemented** | |
-| Retry Button | `btn_retry.png` | **Implemented** | |
-| Next Button | `btn_next.png` | **Implemented** | |
-| Pause Button | `btn_pause.png` | **Implemented** | |
-| Lock Icon | `icon_lock.png` | **Implemented** | |
-| Unlock Icon | `icon_unlock.png` | **Implemented** | |
+| **Title Logo** | Image | ❌ Missing | Needs redesign |
+| **Home Icon** | UI Icon | ❌ Missing | Needs redesign |
+| **Retry Icon** | UI Icon | ❌ Missing | Needs redesign |
+| **Pause Icon** | UI Icon | ❌ Missing | Needs redesign |
+| **Next Icon** | UI Icon | ❌ Missing | Needs redesign |
+| **Block Icon** | UI Icon | ❌ Missing | For HUD inventory |
+| **Goal Icon** | UI Icon | ❌ Missing | For HUD progress |
+| **Lock Icon** | UI Icon | ❌ Missing | |
+| **Unlock Icon** | UI Icon | ❌ Missing | |
 
 ## Game Assets
-| Asset Name | Filename | Status | Notes |
+| Asset Name | Type | Status | Notes |
 | :--- | :--- | :--- | :--- |
-| Ground Tile | `tile_ground.png` | **Implemented** | |
-| Bedrock Tile | `tile_bedrock.png` | **Implemented** | |
-| Magma Tile | `tile_magma.png` | **Placeholder** | Needs real asset. |
-| Goal Tile | `goal.png` | **Implemented** | |
-| Villager | `villager.png` | **Implemented** | 64x192 spritesheet. |
-| Zombie | `zombie.png` | **Implemented** | 64x192 spritesheet. |
+| **Villager** | Sprite (Anim) | ✅ Implemented | Walking animation (4 frames) |
+| **Zombie** | Sprite (Anim) | ✅ Implemented | Walking animation (4 frames) |
+| **Ground Tile** | Tile | ✅ Implemented | Grass/Dirt block |
+| **Bedrock Tile** | Tile | ✅ Implemented | Indestructible block |
+| **Magma Tile** | Tile | ❌ Missing | Currently placeholder |
+| **Goal (House)** | Sprite | ❌ Missing | Currently placeholder/icon |
 
 ## Missing / To Be Created
 - None currently identified as critical missing, but Magma is a placeholder.

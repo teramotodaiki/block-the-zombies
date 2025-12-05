@@ -37,8 +37,8 @@ export class Renderer {
 
         // const tiles = this.game.grid['tiles']; // Accessing private property for rendering... ideally Grid exposes a way to iterate
         // Or just iterate by width/height
-        const width = this.game.grid['width'];
-        const height = this.game.grid['height'];
+        const width = this.game.grid.width;
+        const height = this.game.grid.height;
 
         for (let y = 0; y < height; y++) {
             for (let x = 0; x < width; x++) {
@@ -64,7 +64,11 @@ export class Renderer {
                     }
 
                     if (texture) {
-                        const sprite = this.scene.add.sprite(worldX, worldY, texture);
+                        const sprite = this.scene.add.sprite(
+                            worldX,
+                            worldY,
+                            texture,
+                        );
 
                         // Scale tile to match TILE_SIZE (48px)
                         // Assets are 64x64, so we scale them down.
@@ -110,7 +114,11 @@ export class Renderer {
             activeEntities.add(villager);
             let sprite = this.spriteMap.get(villager);
             if (!sprite) {
-                sprite = this.scene.add.sprite(villager.position.x, villager.position.y, 'entity-villager');
+                sprite = this.scene.add.sprite(
+                    villager.position.x,
+                    villager.position.y,
+                    'entity-villager',
+                );
                 // sprite.setOrigin(0.5, 1); // Reverted to default (Center) as physics uses Center
                 sprite.play('villager-walk');
                 this.villagerGroup.add(sprite);
@@ -128,7 +136,11 @@ export class Renderer {
             activeEntities.add(zombie);
             let sprite = this.spriteMap.get(zombie);
             if (!sprite) {
-                sprite = this.scene.add.sprite(zombie.position.x, zombie.position.y, 'entity-zombie');
+                sprite = this.scene.add.sprite(
+                    zombie.position.x,
+                    zombie.position.y,
+                    'entity-zombie',
+                );
                 // sprite.setOrigin(0.5, 1);
                 sprite.play('zombie-walk');
                 this.zombieGroup.add(sprite);

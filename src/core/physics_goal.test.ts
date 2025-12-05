@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-import { TILE_SIZE } from './constants';
 import { Game } from './game';
 import type { LevelConfig } from './level';
 import { TileType } from './types';

@@ -11,7 +11,9 @@ test('Game Flow: Title -> Level Select -> Game', async ({ page }) => {
     await page.waitForTimeout(2000);
 
     // Debug: Check if gameDebug exists and what scene we are in
-    const initialScene = await page.evaluate(() => (window as any).gameDebug?.getCurrentScene());
+    const initialScene = await page.evaluate(() =>
+        (window as any).gameDebug?.getCurrentScene(),
+    );
     console.log('Initial Scene:', initialScene);
     expect(initialScene).toBe('TitleScene');
 
@@ -22,7 +24,9 @@ test('Game Flow: Title -> Level Select -> Game', async ({ page }) => {
     await page.waitForTimeout(2000);
 
     // Verify we are in Level Select Scene using debug API
-    const sceneName = await page.evaluate(() => (window as any).gameDebug?.getCurrentScene());
+    const sceneName = await page.evaluate(() =>
+        (window as any).gameDebug?.getCurrentScene(),
+    );
     console.log('Scene after click:', sceneName);
     expect(sceneName).toBe('LevelSelectScene');
 
@@ -52,7 +56,9 @@ test('Game Flow: Title -> Level Select -> Game', async ({ page }) => {
     await page.waitForTimeout(2000);
 
     // Verify we are in Game Scene
-    const gameSceneName = await page.evaluate(() => (window as any).gameDebug?.getCurrentScene());
+    const gameSceneName = await page.evaluate(() =>
+        (window as any).gameDebug?.getCurrentScene(),
+    );
     console.log('Scene after level select:', gameSceneName);
     expect(gameSceneName).toBe('GameScene');
 });
