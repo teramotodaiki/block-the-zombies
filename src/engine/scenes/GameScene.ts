@@ -82,6 +82,19 @@ export class GameScene extends Phaser.Scene {
         // Initial render
         this.gameRenderer.init();
 
+        // Create Magma Animation
+        if (!this.anims.exists('magma-anim')) {
+            this.anims.create({
+                key: 'magma-anim',
+                frames: this.anims.generateFrameNumbers('tile-magma-anim', {
+                    start: 0,
+                    end: 3,
+                }),
+                frameRate: 8,
+                repeat: -1,
+            });
+        }
+
         this.events.on('tile-changed', (pos: { x: number; y: number }) => {
             this.gameRenderer.refreshTile(pos.x, pos.y);
         });

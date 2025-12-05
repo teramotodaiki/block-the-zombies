@@ -91,7 +91,7 @@ export class Renderer {
                                 texture = 'tile-bedrock';
                                 break;
                             case TileType.Magma:
-                                texture = 'tile-magma';
+                                texture = 'tile-magma-anim';
                                 break;
                             // TileType.Goal is handled above
                         }
@@ -102,6 +102,10 @@ export class Renderer {
                                 worldY,
                                 texture,
                             );
+
+                            if (tile === TileType.Magma) {
+                                sprite.play('magma-anim');
+                            }
 
                             // Scale tile to match TILE_SIZE (48px)
                             // Assets are 64x64, so we scale them down.
