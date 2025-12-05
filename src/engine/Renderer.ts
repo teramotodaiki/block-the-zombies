@@ -40,6 +40,8 @@ export class Renderer {
         const width = this.game.grid.width;
         const height = this.game.grid.height;
 
+        let goalRendered = false;
+
         for (let y = 0; y < height; y++) {
             for (let x = 0; x < width; x++) {
                 const tile = this.game.grid.getTile(x, y);
@@ -48,11 +50,23 @@ export class Renderer {
                     const worldY = y * TILE_SIZE + TILE_SIZE / 2;
 
                     if (tile === TileType.Goal) {
-                        // Render Goal as an image with specific properties
-                        const goal = this.scene.add.image(worldX, worldY, 'tile-goal');
-                        goal.setOrigin(0.5, 0.75); // Anchor bottom-ish to stand on tile
-                        goal.setDisplaySize(96, 96);
-                        this.tileGroup.add(goal);
+                        // Render Goal ONLY once (at the first encountered tile, assumed top-left)
+                        if (!goalRendered) {
+                            // Center of 2x2 area
+                            const centerX = x * TILE_SIZE + TILE_SIZE;
+                            const centerY = y * TILE_SIZE + TILE_SIZE;
+
+                            const goal = this.scene.add.image(centerX, centerY, 'tile-goal');
+                            goal.setOrigin(0.5, 0.75);
+                            // 2x2 tiles = 96x96. Image is roughly that size.
+                            // Origin 0.75 Y means it sits slightly lower?
+                            // Let's stick to previous origin but positioned at center of 2x2 group.
+                            goal.setDisplaySize(96, 96);
+                            this.tileGroup.add(goal);
+
+                            goalRendered = true;
+                        }
+                        // Do not render anything for other goal tiles (they are covered)
                     } else {
                         // Render other tiles as sprites
                         let texture = '';

@@ -129,36 +129,24 @@ export class LevelSelectScene extends Phaser.Scene {
     ) {
         const btn = this.add.container(x, y);
 
-        const bg = this.add.rectangle(0, 0, 64, 64, 0xe0e0e0);
-        bg.setStrokeStyle(4, 0x4a4a4a);
-        const shadow = this.add
-            .rectangle(0, 32, 64, 4, 0x4a4a4a)
-            .setOrigin(0.5, 0);
-
         const icon = this.add.image(0, 0, texture);
-        icon.setDisplaySize(48, 48);
+        icon.setDisplaySize(64, 64);
 
-        btn.add([shadow, bg, icon]);
+        btn.add(icon);
         btn.setSize(64, 64);
         btn.setInteractive({ useHandCursor: true });
 
         btn.on('pointerdown', () => {
-            bg.y += 4;
-            icon.y += 4;
-            shadow.visible = false;
+            icon.setTint(0xcccccc);
         });
 
         btn.on('pointerup', () => {
-            bg.y = 0;
-            icon.y = 0;
-            shadow.visible = true;
+            icon.clearTint();
             onClick();
         });
 
         btn.on('pointerout', () => {
-            bg.y = 0;
-            icon.y = 0;
-            shadow.visible = true;
+            icon.clearTint();
         });
     }
 }
