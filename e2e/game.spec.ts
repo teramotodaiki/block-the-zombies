@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 test('Game Flow: Title -> Level Select -> Game', async ({ page }) => {
     // 1. Go to home page
