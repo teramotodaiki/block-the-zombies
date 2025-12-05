@@ -66,49 +66,30 @@ export class OverlayManager extends Phaser.GameObjects.Container {
         this.show();
     }
 
-    private createButton(
-        x: number,
-        y: number,
-        texture: string,
-        _color: number,
-        onClick: () => void,
-    ) {
-        const btn = this.scene.add.container(x, y);
+    private createButton(x: number, y: number, key: string, _color: number, callback: () => void) {
+        const container = this.scene.add.container(x, y);
 
-        const bg = this.scene.add.rectangle(0, 0, 80, 80, 0xe0e0e0);
-        bg.setStrokeStyle(4, 0x4a4a4a);
-
-        const shadow = this.scene.add
-            .rectangle(0, 40, 80, 6, 0x4a4a4a)
-            .setOrigin(0.5, 0);
-
-        const icon = this.scene.add.image(0, 0, texture);
-        icon.setDisplaySize(48, 48);
-
-        btn.add([shadow, bg, icon]);
-        btn.setSize(80, 80);
+        const btn = this.scene.add.image(0, 0, key);
+        btn.setDisplaySize(64, 64); // Uniform size
         btn.setInteractive({ useHandCursor: true });
 
-        btn.on('pointerdown', () => {
-            bg.y += 6;
-            icon.y += 6;
-            shadow.visible = false;
-        });
+        container.add(btn);
 
-        const resetBtn = () => {
-            bg.y = 0;
-            icon.y = 0;
-            shadow.visible = true;
-        };
+        btn.on('pointerdown', () => {
+            btn.setTint(0xcccccc);
+        });
 
         btn.on('pointerup', () => {
-            resetBtn();
-            onClick();
+            btn.clearTint();
+            callback();
         });
-        btn.on('pointerout', resetBtn);
 
-        this.add(btn);
-        this.buttons.push(btn);
+        btn.on('pointerout', () => {
+            btn.clearTint();
+        });
+
+        this.add(container);
+        this.buttons.push(container);
     }
 
     private reset() {

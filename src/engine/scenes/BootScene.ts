@@ -13,10 +13,14 @@ export class BootScene extends Phaser.Scene {
         this.load.image('btn-retry', 'assets/game/btn_retry.png');
         this.load.image('btn-next', 'assets/game/btn_next.png');
         this.load.image('btn-pause', 'assets/game/btn_pause.png');
+        this.load.image('icon-lock', 'assets/game/icon_lock.png');
+        this.load.image('icon-unlock', 'assets/game/icon_unlock.png');
+        this.load.image('icon-block', 'assets/game/icon_block.png');
 
         // Tiles
         this.load.image('tile-ground', 'assets/game/tile_ground.png');
         this.load.image('tile-bedrock', 'assets/game/tile_bedrock.png');
+        this.load.image('tile-magma', 'assets/game/tile_magma.png');
         this.load.image('tile-goal', 'assets/game/goal.png');
 
         // Entities

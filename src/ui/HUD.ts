@@ -43,33 +43,26 @@ export class HUD extends Phaser.GameObjects.Container {
     private createPauseButton() {
         this.pauseBtn = this.scene.add.container(750, 40);
 
-        const bg = this.scene.add.rectangle(0, 0, 60, 60, 0x333333);
-        bg.setStrokeStyle(2, 0xffffff);
+        this.pauseBtn = this.scene.add.container(750, 40);
+        const btn = this.scene.add.image(0, 0, 'btn-pause');
+        btn.setDisplaySize(48, 48);
+        btn.setInteractive({ useHandCursor: true });
 
-        const icon = this.scene.add.text(0, 0, '||', {
-            fontSize: '24px',
-            color: '#ffffff',
-            fontFamily: 'monospace'
-        }).setOrigin(0.5);
+        this.pauseBtn.add(btn);
 
-        this.pauseBtn.add([bg, icon]);
-        this.pauseBtn.setSize(60, 60);
-        this.pauseBtn.setInteractive({ useHandCursor: true });
-
-        this.pauseBtn.on('pointerdown', () => {
-            // Visual feedback
-            bg.setFillStyle(0x555555);
+        btn.on('pointerdown', () => {
+            btn.setTint(0xcccccc);
         });
 
-        this.pauseBtn.on('pointerup', () => {
-            bg.setFillStyle(0x333333);
+        btn.on('pointerup', () => {
+            btn.clearTint();
             if (this.onPauseClick) {
                 this.onPauseClick();
             }
         });
 
-        this.pauseBtn.on('pointerout', () => {
-            bg.setFillStyle(0x333333);
+        btn.on('pointerout', () => {
+            btn.clearTint();
         });
 
         this.add(this.pauseBtn);
