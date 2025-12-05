@@ -14,23 +14,9 @@ export class TitleScene extends Phaser.Scene {
         video.play(true); // Loop
         video.setPaused(false);
 
-        // Scale to cover (simulating background-size: cover)
-        const scaleX = width / video.width;
-        const scaleY = height / video.height;
-        const scale = Math.max(scaleX, scaleY);
+        // Scale to fit width (letterbox)
+        const scale = width / video.width;
         video.setScale(scale);
-
-        // Title Logo
-        const logo = this.add.image(
-            this.cameras.main.centerX,
-            200,
-            'title-logo',
-        );
-        logo.setOrigin(0.5);
-        // Logo is 1024x1024, scale it down to fit width
-        const targetWidth = 600;
-        const logoScale = targetWidth / logo.width;
-        logo.setScale(logoScale);
 
         // Tap anywhere to start
         this.input.on('pointerdown', () => {
