@@ -23,6 +23,14 @@ export class BootScene extends Phaser.Scene {
         // Video
         this.load.video('title-bg', 'assets/game/title_bg.mp4');
 
+        // Audio (SE)
+        this.load.audio('se-click', 'assets/game/se_click.mp3');
+        this.load.audio('se-place', 'assets/game/se_place_block.mp3');
+        this.load.audio('se-destroy', 'assets/game/se_destroy_block.mp3');
+        this.load.audio('se-death', 'assets/game/se_villager_death.mp3');
+        this.load.audio('se-clear', 'assets/game/se_level_clear.mp3');
+        this.load.audio('se-goal', 'assets/game/se_goal.mp3');
+
         // Tiles
         this.load.image('tile-ground', 'assets/game/tile_ground.png');
         this.load.image('tile-bedrock', 'assets/game/tile_bedrock.png');
@@ -162,6 +170,15 @@ export class BootScene extends Phaser.Scene {
             g.closePath();
             g.fillPath();
             g.generateTexture('hud-goal-full', 64, 64);
+            g.destroy();
+        }
+
+        // Particle Dirt
+        if (!this.textures.exists('particle-dirt')) {
+            const g = this.make.graphics({ x: 0, y: 0 });
+            g.fillStyle(0x8b4513); // SaddleBrown
+            g.fillRect(0, 0, 8, 8);
+            g.generateTexture('particle-dirt', 8, 8);
             g.destroy();
         }
     }

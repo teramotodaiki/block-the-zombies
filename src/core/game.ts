@@ -216,7 +216,7 @@ export class Game {
 
         const currentTile = this.grid.getTile(gridX, gridY);
 
-        if (currentTile === TileType.Empty) {
+        if (currentTile === TileType.Empty || currentTile === TileType.Magma) {
             // Place
             // Check max blocks
             if (this.levelConfig.maxBlocks <= 0) return false;

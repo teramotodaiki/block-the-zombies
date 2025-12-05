@@ -98,6 +98,7 @@ export class LevelSelectScene extends Phaser.Scene {
                 bg.y += 4;
                 text.y += 4;
                 shadow.visible = false;
+                this.sound.play('se-click');
             });
 
             btn.on('pointerup', () => {
@@ -138,6 +139,7 @@ export class LevelSelectScene extends Phaser.Scene {
 
         btn.on('pointerdown', () => {
             icon.setTint(0xcccccc);
+            this.sound.play('se-click');
         });
 
         btn.on('pointerup', () => {

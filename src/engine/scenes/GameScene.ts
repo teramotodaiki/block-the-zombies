@@ -6,6 +6,8 @@ import { HUD } from '../../ui/HUD';
 import { OverlayManager } from '../../ui/OverlayManager';
 import { InputManager } from '../InputManager';
 import { Renderer } from '../Renderer';
+import { TileType } from '../../core/types';
+import { TILE_SIZE } from '../../core/constants';
 
 export class GameScene extends Phaser.Scene {
     private gameCore!: Game;
@@ -14,12 +16,18 @@ export class GameScene extends Phaser.Scene {
     private hud!: HUD;
     private isGameEnded = false;
 
+    private prevVillagerCount = 0;
+    private prevGoalCount = 0;
+    private blockBreakEmitter!: Phaser.GameObjects.Particles.ParticleEmitter;
+
     constructor() {
         super('GameScene');
     }
 
     create(data: { levelIndex?: number }) {
         this.isGameEnded = false;
+        this.prevVillagerCount = 0;
+        this.prevGoalCount = 0;
 
         // Sky Background
         const width = this.cameras.main.width;
@@ -97,6 +105,27 @@ export class GameScene extends Phaser.Scene {
 
         this.events.on('tile-changed', (pos: { x: number; y: number }) => {
             this.gameRenderer.refreshTile(pos.x, pos.y);
+
+            // Audio & Effects
+            const tile = this.gameCore.grid.getTile(pos.x, pos.y);
+            if (tile === TileType.Ground) {
+                this.sound.play('se-place');
+            } else if (tile === TileType.Empty) {
+                this.sound.play('se-destroy');
+                // Particle Effect
+                const worldX = pos.x * TILE_SIZE + TILE_SIZE / 2;
+                const worldY = pos.y * TILE_SIZE + TILE_SIZE / 2;
+                this.blockBreakEmitter.explode(10, worldX, worldY);
+            }
+        });
+
+        // Initialize Effects
+        this.blockBreakEmitter = this.add.particles(0, 0, 'particle-dirt', {
+            speed: 100,
+            lifespan: 500,
+            gravityY: 300,
+            scale: { start: 1, end: 0 },
+            emitting: false
         });
 
         // Expose Debug API
@@ -130,6 +159,7 @@ export class GameScene extends Phaser.Scene {
         if (!this.isGameEnded) {
             this.gameCore.update(delta / 1000);
             this.checkGameState();
+            this.checkEntityAudio();
         }
 
         // Render update
@@ -145,6 +175,7 @@ export class GameScene extends Phaser.Scene {
             );
         } else if (this.gameCore.isLevelCleared) {
             this.isGameEnded = true;
+            this.sound.play('se-clear');
             this.overlayManager.showLevelClear(() => {
                 const levelManager = this.registry.get('levelManager') as LevelManager;
                 const nextIndex = levelManager.getCurrentLevelIndex() + 1;
@@ -157,5 +188,25 @@ export class GameScene extends Phaser.Scene {
                 this.scene.start('LevelSelectScene');
             });
         }
+    }
+
+    private checkEntityAudio() {
+        // Check for Goal or Death
+        const currentVillagerCount = this.gameCore.villagers.length;
+        const currentGoalCount = this.gameCore.goalCount;
+
+        if (currentVillagerCount < this.prevVillagerCount) {
+            // Someone was removed
+            if (currentGoalCount > this.prevGoalCount) {
+                // Goal reached
+                this.sound.play('se-goal', { volume: 0.8 });
+            } else {
+                // Died
+                this.sound.play('se-death');
+            }
+        }
+
+        this.prevVillagerCount = currentVillagerCount;
+        this.prevGoalCount = currentGoalCount;
     }
 }

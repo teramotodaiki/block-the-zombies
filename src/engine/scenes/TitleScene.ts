@@ -20,6 +20,7 @@ export class TitleScene extends Phaser.Scene {
 
         // Tap anywhere to start
         this.input.on('pointerdown', () => {
+            this.sound.play('se-click');
             this.scene.start('LevelSelectScene');
         });
 

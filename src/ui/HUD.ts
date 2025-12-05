@@ -73,7 +73,10 @@ export class HUD extends Phaser.GameObjects.Container {
         btn.setInteractive({ useHandCursor: true });
 
         btn.on('pointerdown', () => {
-            if (btn.input?.enabled) btn.setTint(0xcccccc);
+            if (btn.input?.enabled) {
+                btn.setTint(0xcccccc);
+                this.scene.sound.play('se-click');
+            }
         });
 
         btn.on('pointerup', () => {
