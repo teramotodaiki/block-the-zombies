@@ -6,7 +6,19 @@ export class TitleScene extends Phaser.Scene {
     }
 
     create() {
-        this.cameras.main.setBackgroundColor('#87CEEB');
+        // Video Background
+        const width = this.cameras.main.width;
+        const height = this.cameras.main.height;
+
+        const video = this.add.video(width / 2, height / 2, 'title-bg');
+        video.play(true); // Loop
+        video.setPaused(false);
+
+        // Scale to cover (simulating background-size: cover)
+        const scaleX = width / video.width;
+        const scaleY = height / video.height;
+        const scale = Math.max(scaleX, scaleY);
+        video.setScale(scale);
 
         // Title Logo
         const logo = this.add.image(
@@ -17,8 +29,8 @@ export class TitleScene extends Phaser.Scene {
         logo.setOrigin(0.5);
         // Logo is 1024x1024, scale it down to fit width
         const targetWidth = 600;
-        const scale = targetWidth / logo.width;
-        logo.setScale(scale);
+        const logoScale = targetWidth / logo.width;
+        logo.setScale(logoScale);
 
         // Tap anywhere to start
         this.input.on('pointerdown', () => {
@@ -30,9 +42,9 @@ export class TitleScene extends Phaser.Scene {
             startLevel: (levelIndex?: number) =>
                 this.scene.start('GameScene', { levelIndex: levelIndex ?? 0 }),
             goToTitle: () => this.scene.start('TitleScene'),
-            restartLevel: () => {},
-            forceGameOver: () => {},
-            forceLevelClear: () => {},
+            restartLevel: () => { },
+            forceGameOver: () => { },
+            forceLevelClear: () => { },
             getCurrentScene: () => 'TitleScene',
         };
     }

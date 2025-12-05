@@ -20,6 +20,9 @@ export class BootScene extends Phaser.Scene {
         this.load.image('ui-game-over', 'assets/game/ui_game_over.png');
         // this.load.image('ui-paused', 'assets/game/ui_paused.png'); // Removed per user request
 
+        // Video
+        this.load.video('title-bg', 'assets/game/title_bg.mp4');
+
         // Tiles
         this.load.image('tile-ground', 'assets/game/tile_ground.png');
         this.load.image('tile-bedrock', 'assets/game/tile_bedrock.png');

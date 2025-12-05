@@ -20,6 +20,16 @@ export class GameScene extends Phaser.Scene {
 
     create(data: { levelIndex?: number }) {
         this.isGameEnded = false;
+
+        // Sky Background
+        const width = this.cameras.main.width;
+        const height = this.cameras.main.height;
+        const sky = this.add.graphics();
+        sky.fillGradientStyle(0x4A90E2, 0x4A90E2, 0x87CEEB, 0x87CEEB, 1);
+        sky.fillRect(0, 0, width, height);
+        sky.setScrollFactor(0);
+        sky.setDepth(-100); // Behind everything
+
         // Ideally LevelManager is a singleton or passed from previous scene.
         // For now, let's instantiate it here or get from registry?
         // Better: Pass LevelManager instance? No, data must be serializable.
