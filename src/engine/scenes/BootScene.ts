@@ -21,7 +21,10 @@ export class BootScene extends Phaser.Scene {
         this.load.image('tile-ground', 'assets/game/tile_ground.png');
         this.load.image('tile-bedrock', 'assets/game/tile_bedrock.png');
         this.load.image('tile-magma', 'assets/game/tile_magma.png');
-        this.load.image('tile-goal', 'assets/game/tile_goal.png');
+        this.load.spritesheet('tile-goal', 'assets/game/goal_sheet.png', {
+            frameWidth: 704,
+            frameHeight: 384,
+        });
 
         // Entities
         this.load.spritesheet('entity-villager', 'assets/game/villager.png', {

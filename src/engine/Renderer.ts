@@ -11,6 +11,8 @@ export class Renderer {
     private villagerGroup: Phaser.GameObjects.Group;
     private zombieGroup: Phaser.GameObjects.Group;
 
+    private goalSprite: Phaser.GameObjects.Sprite | null = null; // Add property
+
     // Since entities are objects, we can use a Map<Entity, Sprite>
     private spriteMap: Map<any, Phaser.GameObjects.Sprite>;
 
@@ -30,10 +32,24 @@ export class Renderer {
     render() {
         // Update Entities
         this.syncSprites();
+        this.updateGoalVisual();
+    }
+
+    private updateGoalVisual() {
+        if (this.goalSprite) {
+            // goalCount 0-3 maps to frames 0-3
+            const frame = Math.min(this.game.goalCount, 3);
+            if (this.goalSprite.frame.name !== String(frame)) {
+                // only log on change or force set
+                console.log(`Updating Goal Visual: Count=${this.game.goalCount}, Frame=${frame}`);
+                this.goalSprite.setFrame(frame);
+            }
+        }
     }
 
     private renderTiles() {
         this.tileGroup.clear(true, true);
+        this.goalSprite = null; // Reset reference
 
         // const tiles = this.game.grid['tiles']; // Accessing private property for rendering... ideally Grid exposes a way to iterate
         // Or just iterate by width/height
@@ -56,13 +72,13 @@ export class Renderer {
                             const centerX = x * TILE_SIZE + TILE_SIZE;
                             const centerY = y * TILE_SIZE + TILE_SIZE;
 
-                            const goal = this.scene.add.image(centerX, centerY, 'tile-goal');
-                            goal.setOrigin(0.5, 0.75);
-                            // 2x2 tiles = 96x96. Image is roughly that size.
-                            // Origin 0.75 Y means it sits slightly lower?
-                            // Let's stick to previous origin but positioned at center of 2x2 group.
-                            goal.setDisplaySize(96, 96);
-                            this.tileGroup.add(goal);
+                            // Use Sprite instead of Image
+                            this.goalSprite = this.scene.add.sprite(centerX, centerY, 'tile-goal');
+                            this.goalSprite.setOrigin(0.5, 0.85); // Anchor bottom, slightly offset up
+                            // Aspect ratio 704:384 ~ 1.83
+                            // Target width 140 -> Height ~76
+                            this.goalSprite.setDisplaySize(140, 76);
+                            this.tileGroup.add(this.goalSprite);
 
                             goalRendered = true;
                         }

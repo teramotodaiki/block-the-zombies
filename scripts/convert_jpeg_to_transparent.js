@@ -3,9 +3,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 import sharp from 'sharp';
 
-const INPUT_FILE = path.join(process.cwd(), 'workbench/ui_sheet.png');
-const OUTPUT_FILE = path.join(process.cwd(), 'workbench/ui_sheet_transparent.png');
-const THRESHOLD = 90; // Increased threshold for green removal
+const INPUT_FILE = path.join(process.cwd(), 'workbench/goal_source.png');
+const OUTPUT_FILE = path.join(process.cwd(), 'public/assets/game/goal_sheet.png');
+const THRESHOLD = 60; // Reset threshold just in case
 
 async function processImage() {
     if (!fs.existsSync(INPUT_FILE)) {
