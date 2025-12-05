@@ -41,7 +41,6 @@ export class Renderer {
             const frame = Math.min(this.game.goalCount, 3);
             if (this.goalSprite.frame.name !== String(frame)) {
                 // only log on change or force set
-                console.log(`Updating Goal Visual: Count=${this.game.goalCount}, Frame=${frame}`);
                 this.goalSprite.setFrame(frame);
             }
         }
