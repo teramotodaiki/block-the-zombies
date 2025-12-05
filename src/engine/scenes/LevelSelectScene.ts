@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 
-import { LEVELS } from '../../core/level';
+import { LEVELS } from '../../levels';
 import { LevelManager } from '../../core/level-manager';
 
 export class LevelSelectScene extends Phaser.Scene {

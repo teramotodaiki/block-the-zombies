@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { Game } from '../../core/game';
-import { LEVELS } from '../../core/level';
+import { LEVELS } from '../../levels';
 import { LevelManager } from '../../core/level-manager';
 import { HUD } from '../../ui/HUD';
 import { OverlayManager } from '../../ui/OverlayManager';
