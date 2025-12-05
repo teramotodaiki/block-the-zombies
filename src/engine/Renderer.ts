@@ -190,8 +190,23 @@ export class Renderer {
         // Remove dead sprites
         for (const [entity, sprite] of this.spriteMap.entries()) {
             if (!activeEntities.has(entity)) {
-                sprite.destroy();
+                // Determine if it was a valid death (not level end cleanup)
+                // For now, simple animation for all removals during gameplay
+                // We could check this.game.isGameOver/LevelCleared to avoid animating on scene exit?
+                // But this method is called in render().
+
                 this.spriteMap.delete(entity);
+
+                // Death Animation
+                this.scene.tweens.add({
+                    targets: sprite,
+                    alpha: 0,
+                    y: sprite.y - 50,
+                    duration: 500,
+                    onComplete: () => {
+                        sprite.destroy();
+                    }
+                });
             }
         }
     }
