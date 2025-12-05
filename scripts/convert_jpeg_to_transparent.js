@@ -3,8 +3,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import sharp from 'sharp';
 
-const INPUT_FILE = path.join(process.cwd(), 'workbench/goal_source.png');
-const OUTPUT_FILE = path.join(process.cwd(), 'public/assets/game/goal_sheet.png');
+const INPUT_FILE = process.argv[2] ? path.resolve(process.argv[2]) : path.join(process.cwd(), 'workbench/goal_source.png');
+const OUTPUT_FILE = process.argv[3] ? path.resolve(process.argv[3]) : path.join(process.cwd(), 'public/assets/game/goal_sheet.png');
 const THRESHOLD = 60; // Reset threshold just in case
 
 async function processImage() {

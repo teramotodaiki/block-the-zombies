@@ -19,6 +19,7 @@ export class GameScene extends Phaser.Scene {
     }
 
     create(data: { levelIndex?: number }) {
+        this.isGameEnded = false;
         // Ideally LevelManager is a singleton or passed from previous scene.
         // For now, let's instantiate it here or get from registry?
         // Better: Pass LevelManager instance? No, data must be serializable.

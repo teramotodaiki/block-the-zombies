@@ -73,3 +73,8 @@
 
 - git commit はエージェントが適切な粒度で行うこと。ユーザーの指示を待つ必要はありません。
 - 今はまだ remote repository がないので、 main branch に直接 commit してください。
+
+## 画像生成
+
+Nano Banana Pro 3 は透過色を生成できません。
+白背景にしてから、背景を透過してください。
