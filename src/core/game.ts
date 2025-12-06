@@ -74,7 +74,10 @@ export class Game {
         // Update Entities
         for (const entity of this.entities) {
             entity.update(delta, this.grid);
-            if (entity.isDead && entity.position.y > this.grid.height * TILE_SIZE) {
+            if (
+                entity.isDead &&
+                entity.position.y > this.grid.height * TILE_SIZE
+            ) {
                 if (entity instanceof Villager) {
                     this.onEntityEvent?.('villager-died', entity);
                 } else if (entity instanceof Zombie) {

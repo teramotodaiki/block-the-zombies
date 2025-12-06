@@ -1,7 +1,6 @@
 import Phaser from 'phaser';
-
-import { LEVELS } from '../../levels';
 import { LevelManager } from '../../core/level-manager';
+import { LEVELS } from '../../levels';
 
 export class LevelSelectScene extends Phaser.Scene {
     constructor() {
@@ -52,9 +51,9 @@ export class LevelSelectScene extends Phaser.Scene {
             startLevel: (levelIndex?: number) =>
                 this.scene.start('GameScene', { levelIndex: levelIndex ?? 0 }),
             goToTitle: () => this.scene.start('TitleScene'),
-            restartLevel: () => { },
-            forceGameOver: () => { },
-            forceLevelClear: () => { },
+            restartLevel: () => {},
+            forceGameOver: () => {},
+            forceLevelClear: () => {},
             getCurrentScene: () => 'LevelSelectScene',
         };
     }

@@ -1,9 +1,11 @@
-
 import fs from 'node:fs';
 import path from 'node:path';
 import sharp from 'sharp';
 
-const INPUT_FILE = path.join(process.cwd(), 'workbench/ui_sheet_transparent.png');
+const INPUT_FILE = path.join(
+    process.cwd(),
+    'workbench/ui_sheet_transparent.png',
+);
 const OUTPUT_DIR = path.join(process.cwd(), 'workbench/sliced');
 
 if (!fs.existsSync(OUTPUT_DIR)) {
@@ -32,7 +34,8 @@ async function sliceSprites() {
             if (visited[y * width + x]) continue;
 
             const alpha = data[idx(x, y) + 3];
-            if (alpha > 10) { // Non-transparent
+            if (alpha > 10) {
+                // Non-transparent
                 // Found a new blob
                 const blob = { minX: x, maxX: x, minY: y, maxY: y, pixels: [] };
                 blobs.push(blob);
@@ -50,8 +53,10 @@ async function sliceSprites() {
 
                     // Check neighbors
                     const neighbors = [
-                        [cx + 1, cy], [cx - 1, cy],
-                        [cx, cy + 1], [cx, cy - 1]
+                        [cx + 1, cy],
+                        [cx - 1, cy],
+                        [cx, cy + 1],
+                        [cx, cy - 1],
                     ];
 
                     for (const [nx, ny] of neighbors) {

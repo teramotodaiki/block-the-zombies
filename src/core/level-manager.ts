@@ -34,7 +34,11 @@ export class LevelManager {
     }
 
     setLevel(index: number): boolean {
-        if (index >= 0 && index < this.levels.length && this.isLevelUnlocked(index)) {
+        if (
+            index >= 0 &&
+            index < this.levels.length &&
+            this.isLevelUnlocked(index)
+        ) {
             this.currentLevelIndex = index;
             return true;
         }
@@ -71,7 +75,7 @@ export class LevelManager {
             if (data) {
                 const arr = JSON.parse(data);
                 if (Array.isArray(arr)) {
-                    arr.forEach(idx => this.unlockedLevels.add(Number(idx)));
+                    arr.forEach((idx) => this.unlockedLevels.add(Number(idx)));
                 }
             }
         } catch (e) {

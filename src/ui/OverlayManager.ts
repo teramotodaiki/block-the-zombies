@@ -77,7 +77,13 @@ export class OverlayManager extends Phaser.GameObjects.Container {
         this.show();
     }
 
-    private createButton(x: number, y: number, key: string, _color: number, callback: () => void) {
+    private createButton(
+        x: number,
+        y: number,
+        key: string,
+        _color: number,
+        callback: () => void,
+    ) {
         const container = this.scene.add.container(x, y);
 
         const btn = this.scene.add.image(0, 0, key);

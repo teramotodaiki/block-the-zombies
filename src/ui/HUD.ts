@@ -51,9 +51,14 @@ export class HUD extends Phaser.GameObjects.Container {
         const spacing = 70;
 
         // Home Button
-        this.homeBtn = this.createButton(startX - spacing, y, 'btn-home', () => {
-            if (this.onHomeClick) this.onHomeClick();
-        });
+        this.homeBtn = this.createButton(
+            startX - spacing,
+            y,
+            'btn-home',
+            () => {
+                if (this.onHomeClick) this.onHomeClick();
+            },
+        );
 
         // Retry Button
         this.retryBtn = this.createButton(startX, y, 'btn-retry', () => {
@@ -61,12 +66,22 @@ export class HUD extends Phaser.GameObjects.Container {
         });
 
         // Pause/Play Button
-        this.pauseBtn = this.createButton(startX + spacing, y, 'btn-pause', () => {
-            if (this.onPauseClick) this.onPauseClick();
-        });
+        this.pauseBtn = this.createButton(
+            startX + spacing,
+            y,
+            'btn-pause',
+            () => {
+                if (this.onPauseClick) this.onPauseClick();
+            },
+        );
     }
 
-    private createButton(x: number, y: number, key: string, callback: () => void): Phaser.GameObjects.Image {
+    private createButton(
+        x: number,
+        y: number,
+        key: string,
+        callback: () => void,
+    ): Phaser.GameObjects.Image {
         const container = this.scene.add.container(x, y);
         const btn = this.scene.add.image(0, 0, key);
         btn.setDisplaySize(48, 48);

@@ -1,5 +1,4 @@
-import { describe, it, expect } from 'vitest';
-import { validateLevel } from './validator';
+import { describe, expect, it } from 'vitest';
 // Create an index file later or just import individually if needed,
 // but for now I'll assume I can import them.
 // Since I don't have an index of all levels yet, I will import specific ones or all from index if available.
@@ -10,17 +9,12 @@ import { PLAINS_02 } from './plains/plains-02';
 import { PLAINS_03 } from './plains/plains-03';
 import { PLAINS_04 } from './plains/plains-04';
 import { PLAINS_05 } from './plains/plains-05';
+import { validateLevel } from './validator';
 
-const LEVEL_LIST = [
-    PLAINS_01,
-    PLAINS_02,
-    PLAINS_03,
-    PLAINS_04,
-    PLAINS_05
-];
+const LEVEL_LIST = [PLAINS_01, PLAINS_02, PLAINS_03, PLAINS_04, PLAINS_05];
 
 describe('Level Validation', () => {
-    LEVEL_LIST.forEach(level => {
+    LEVEL_LIST.forEach((level) => {
         it(`Level ${level.id} should pass validation`, () => {
             const errors = validateLevel(level);
             if (errors.length > 0) {
