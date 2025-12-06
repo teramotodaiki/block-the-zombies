@@ -113,4 +113,45 @@ describe('Game', () => {
         // 264 + 20 = 284. Correct.
         expect(game.zombies[0].position.x).toBe(5 * 48 + 24 + 20);
     });
+
+    it('should spawn zombies periodically', () => {
+        const periodicLevel: LevelConfig = {
+            ...mockLevel,
+            zombieSpawns: [
+                { position: { x: 0, y: 0 }, time: 100, interval: 200 },
+            ],
+        };
+        const game = new Game(periodicLevel);
+
+        // t=0.1s: Spawn 1st
+        game.update(0.1);
+        expect(game.zombies.length).toBe(1);
+
+        // t=0.2s (Total 0.2s). Next spawn is 0.1 + 0.2 = 0.3s.
+        game.update(0.1);
+        expect(game.zombies.length).toBe(1);
+
+        // t=0.3s. Spawn 2nd.
+        game.update(0.1);
+        expect(game.zombies.length).toBe(2);
+    });
+
+    it('should respect max zombies limit', () => {
+        // Fast spawn: every 10ms
+        const fastSpawnLevel: LevelConfig = {
+            ...mockLevel,
+            zombieSpawns: [
+                { position: { x: 0, y: 0 }, time: 0, interval: 10 },
+            ],
+        };
+        const game = new Game(fastSpawnLevel);
+
+        // Run for 1 second -> should try to spawn 100 zombies
+        // But limited to 3.
+        for (let i = 0; i < 50; i++) {
+            game.update(0.02); // 20ms steps
+        }
+
+        expect(game.zombies.length).toBe(3);
+    });
 });

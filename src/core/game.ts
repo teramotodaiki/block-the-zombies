@@ -16,9 +16,8 @@ export class Game {
     villagerSpawnTimer: number;
     villagersSpawnedCount: number;
 
-    // Track which zombies have been spawned.
-    // We use a boolean array corresponding to levelConfig.zombieSpawns indices.
-    zombieSpawnedFlags: boolean[];
+    // Track next spawn time for each zombie spawner
+    zombieNextSpawnTimes: number[];
 
     goalCount: number;
     isGameOver: boolean;
@@ -45,10 +44,10 @@ export class Game {
         this.villagerSpawnTimer = 0;
         this.villagersSpawnedCount = 0;
 
-        // Initialize flags for zombie spawns
-        this.zombieSpawnedFlags = new Array(
-            this.levelConfig.zombieSpawns.length,
-        ).fill(false);
+        // Initialize next spawn times
+        this.zombieNextSpawnTimes = this.levelConfig.zombieSpawns.map(
+            (zoom) => zoom.time,
+        );
 
         this.goalCount = 0;
         this.isGameOver = false;
@@ -121,15 +120,53 @@ export class Game {
     }
 
     private updateZombieSpawn(_delta: number) {
-        // Check each spawn definition
-        for (let i = 0; i < this.levelConfig.zombieSpawns.length; i++) {
-            if (this.zombieSpawnedFlags[i]) continue;
+        const currentTimeMs = this.timeElapsed * 1000;
 
-            const spawnDef = this.levelConfig.zombieSpawns[i];
-            // time is in ms
-            if (this.timeElapsed * 1000 >= spawnDef.time) {
-                this.spawnZombie(spawnDef.position);
-                this.zombieSpawnedFlags[i] = true;
+        for (let i = 0; i < this.levelConfig.zombieSpawns.length; i++) {
+            const nextTime = this.zombieNextSpawnTimes[i];
+            if (nextTime === Infinity) continue;
+
+            if (currentTimeMs >= nextTime) {
+                // Check if we reached the limit of zombies on screen
+                // Max 3 zombies at once (similar to villagers)
+                if (this.zombies.length < 3) {
+                    const spawnDef = this.levelConfig.zombieSpawns[i];
+                    this.spawnZombie(spawnDef.position);
+
+                    // If interval is defined, schedule next spawn
+                    if (spawnDef.interval && spawnDef.interval > 0) {
+                        this.zombieNextSpawnTimes[i] += spawnDef.interval;
+                    } else {
+                        // One-shot
+                        this.zombieNextSpawnTimes[i] = Infinity;
+                    }
+                } else {
+                    // Skip this spawn window if max zombies reached?
+                    // OR should we defer it?
+                    // Implementation choice: Defer it by pushing the timer forward?
+                    // Or just skip it and wait for next interval?
+                    // If we just skip, we might miss the "beat".
+                    // If we check again next frame, we spawn immediately when slot opens.
+                    // Let's NOT advance the time if we failed to spawn due to cap.
+                    // BUT for interval based, we usually want regular intervals.
+                    // If interval based, let's advance the timer anyway to keep the "beat",
+                    // effectively skipping this wave.
+                    const spawnDef = this.levelConfig.zombieSpawns[i];
+                    if (spawnDef.interval && spawnDef.interval > 0) {
+                        this.zombieNextSpawnTimes[i] += spawnDef.interval;
+                    } else {
+                        // One-shot but blocked? Retry next frame?
+                        // If one-shot and blocked, we should probably retry.
+                        // So do NOT change nextTime.
+                    }
+
+                    // Actually, if it's interval based and we skip, it might feel weird if no zombies appear for a long time.
+                    // Let's Retry logic: Do NOT advance timer. Wait until space frees up.
+                    // But then we spawn immediately.
+                    // Let's stick to: "If blocked, retry next frame".
+                    // So we only advance timer if we actually spawned OR if we decided to skip.
+                    // Simple approach: Only spawn and advance if (zombies.length < 3).
+                }
             }
         }
     }
