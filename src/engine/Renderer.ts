@@ -1,5 +1,6 @@
 import type Phaser from 'phaser';
 import { TILE_SIZE } from '../core/constants';
+import type { Entity } from '../core/entity';
 import type { Game } from '../core/game';
 import { TileType } from '../core/types';
 
@@ -14,7 +15,7 @@ export class Renderer {
     private goalSprite: Phaser.GameObjects.Sprite | null = null; // Add property
 
     // Since entities are objects, we can use a Map<Entity, Sprite>
-    private spriteMap: Map<any, Phaser.GameObjects.Sprite>;
+    private spriteMap: Map<Entity, Phaser.GameObjects.Sprite>;
 
     constructor(scene: Phaser.Scene, game: Game) {
         this.scene = scene;
@@ -141,7 +142,7 @@ export class Renderer {
 
     private syncSprites() {
         // Track which entities are still alive
-        const activeEntities = new Set<any>();
+        const activeEntities = new Set<Entity>();
 
         // Villagers
         for (const villager of this.game.villagers) {

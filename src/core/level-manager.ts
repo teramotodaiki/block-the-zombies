@@ -71,7 +71,9 @@ export class LevelManager {
             if (data) {
                 const arr = JSON.parse(data);
                 if (Array.isArray(arr)) {
-                    arr.forEach(idx => this.unlockedLevels.add(Number(idx)));
+                    for (const idx of arr) {
+                        this.unlockedLevels.add(Number(idx));
+                    }
                 }
             }
         } catch (e) {
