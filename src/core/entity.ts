@@ -30,11 +30,6 @@ export abstract class Entity {
 
     protected moveX(delta: number, grid: Grid) {
         const nextX = this.position.x + this.velocity.x * delta;
-        // Constructor: this.position = { x, y };
-        // moveY logic: this.position.y = tileY * TILE_SIZE - this.height / 2;
-        // This implies position.y is the CENTER of the entity.
-        // So Top = y - height / 2.
-        // Bottom = y + height / 2.
 
         const topEdge = this.position.y - this.height / 2;
         const bottomEdge = this.position.y + this.height / 2 - 0.1; // Epsilon to avoid checking tile below when standing exactly on it
@@ -75,14 +70,6 @@ export abstract class Entity {
         }
 
         if (collision) {
-            // Climbing Logic (Only for Villager, but implemented in Entity for now or check instance)
-            // Ideally Entity should have a flag 'canClimb' or similar.
-            // For now, let's check if we can climb.
-            // We can climb if:
-            // 1. The wall is exactly 1 tile high relative to our feet.
-            // 2. The tile ABOVE the wall is empty.
-            // 3. We are grounded.
-
             if (this.isGrounded) {
                 // Check if the collision is at foot level
                 const footTileY = Math.floor(
@@ -96,17 +83,8 @@ export abstract class Entity {
                     // Actually, we just need to check if (wallTileX, wallTileY - 1) is not solid.
                     if (!grid.isSolid(wallTileX, wallTileY - 1)) {
                         // Climb!
-                        // Snap to top of the wall tile
                         this.position.y =
                             wallTileY * TILE_SIZE - this.height / 2;
-                        // Move forward slightly to be on the tile?
-                        // Or just let the next frame handle movement.
-                        // If we just change Y, we are now overlapping the wall horizontally?
-                        // No, we are 'on top' of it.
-                        // But our X is still 'before' the wall.
-                        // We need to advance X as well, or just let the loop continue?
-                        // If we change Y, we are no longer colliding with the wall at (wallTileX, wallTileY).
-                        // So we can proceed.
                         this.position.x = nextX;
                         return;
                     }
@@ -157,7 +135,6 @@ export abstract class Entity {
         this.isGrounded = false;
 
         // Check out of bounds (Bottom)
-        // If entity falls below the map, kill it to prevent memory leaks
         if (this.position.y > grid.height * TILE_SIZE + 200) {
             this.isDead = true;
         }
@@ -178,13 +155,39 @@ export class Villager extends Entity {
 
         this.applyGravity(delta);
 
-        // Auto-walk
-        this.velocity.x = this.direction * MOVE_SPEED;
+        // Cliff Detection
+        if (this.isGrounded) {
+            const lookAheadX = this.direction === Direction.Right ? 1 : -1;
 
-        // Check for wall ahead (1 block high)
-        // If wall is 1 block high, can we climb?
-        // Spec says: "Can climb 1 block high steps. Cannot climb 2 blocks."
-        // Implementation: If wall ahead, check tile above it. If empty, jump/snap up.
+            // Check if we are close enough to the edge to care
+            // Only check if we are in the latter half of the tile in moving direction
+            const offsetX = this.position.x % TILE_SIZE;
+            const inRightHalf = offsetX > TILE_SIZE / 2;
+            const inLeftHalf = offsetX < TILE_SIZE / 2;
+
+            // Determine if we should perform the check based on position within tile
+            let shouldCheck = false;
+            if (this.direction === Direction.Right && inRightHalf) shouldCheck = true;
+            if (this.direction === Direction.Left && inLeftHalf) shouldCheck = true;
+
+            if (shouldCheck) {
+                const gridY = Math.floor((this.position.y + this.height / 2) / TILE_SIZE); // Tile below Feet
+                const currentGridX = Math.floor(this.position.x / TILE_SIZE);
+                const nextGridX = currentGridX + lookAheadX;
+
+                // Check if the immediate tile we are stepping onto is empty (Hole)
+                if (grid.isValid(nextGridX, gridY) && !grid.isSolid(nextGridX, gridY)) {
+                    // It's a drop. Check depth.
+                    if (grid.isValid(nextGridX, gridY + 1) && !grid.isSolid(nextGridX, gridY + 1)) {
+                        // Drop of 2+, turn back
+                        this.direction = this.direction === Direction.Right ? Direction.Left : Direction.Right;
+                        this.velocity.x = this.direction * MOVE_SPEED;
+                    }
+                }
+            }
+        }
+
+        this.velocity.x = this.direction * MOVE_SPEED;
 
         this.moveX(delta, grid);
         this.moveY(delta, grid);
@@ -208,6 +211,38 @@ export class Zombie extends Entity {
         if (this.isDead) return;
 
         this.applyGravity(delta);
+
+        // Cliff Detection
+        if (this.isGrounded) {
+            const lookAheadX = this.direction === Direction.Right ? 1 : -1;
+
+            // Check if we are close enough to the edge to care
+            // Only check if we are in the latter half of the tile in moving direction
+            const offsetX = this.position.x % TILE_SIZE;
+            const inRightHalf = offsetX > TILE_SIZE / 2;
+            const inLeftHalf = offsetX < TILE_SIZE / 2;
+
+            let shouldCheck = false;
+            if (this.direction === Direction.Right && inRightHalf) shouldCheck = true;
+            if (this.direction === Direction.Left && inLeftHalf) shouldCheck = true;
+
+            if (shouldCheck) {
+                const gridY = Math.floor((this.position.y + this.height / 2) / TILE_SIZE); // Tile below Feet
+                const currentGridX = Math.floor(this.position.x / TILE_SIZE);
+                const nextGridX = currentGridX + lookAheadX;
+
+                // Check if the immediate tile we are stepping onto is empty (Hole)
+                if (grid.isValid(nextGridX, gridY) && !grid.isSolid(nextGridX, gridY)) {
+                    // It's a drop. Check depth.
+                    if (grid.isValid(nextGridX, gridY + 1) && !grid.isSolid(nextGridX, gridY + 1)) {
+                        // Drop of 2+, turn back
+                        this.direction = this.direction === Direction.Right ? Direction.Left : Direction.Right;
+                        this.velocity.x = this.direction * MOVE_SPEED;
+                    }
+                }
+            }
+        }
+
         this.velocity.x = this.direction * MOVE_SPEED;
 
         this.moveX(delta, grid);
