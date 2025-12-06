@@ -1,9 +1,19 @@
 /* Global Styles & Font Loading */
 @import url("https://fonts.googleapis.com/css2?family=VT323&display=swap");
 
+html,
 body {
     margin: 0;
     padding: 0;
+    width: 100%;
+    height: 100%;
     background-color: #000;
     overflow: hidden;
+}
+
+#app {
+    width: 100vw;
+    height: 100dvh;
+    padding: 0;
+    margin: 0;
 }

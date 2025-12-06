@@ -24,4 +24,20 @@ const config: Phaser.Types.Core.GameConfig = {
     scene: [BootScene, TitleScene, LevelSelectScene, GameScene],
 };
 
-new Phaser.Game(config);
+const game = new Phaser.Game(config);
+
+function fixViewportHeight() {
+    const el = document.getElementById('app');
+    if (!el) return;
+    el.style.height = `${window.innerHeight}px`;
+    game.scale.refresh();
+}
+
+window.addEventListener('resize', fixViewportHeight);
+window.addEventListener('orientationchange', () => {
+    // Slight delay to allow the browser to update dimensions
+    setTimeout(fixViewportHeight, 100);
+});
+
+// Initial call
+fixViewportHeight();
