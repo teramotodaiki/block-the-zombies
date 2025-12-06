@@ -23,7 +23,7 @@ export const PLAINS_13: LevelConfig = {
         '...........**...',
         'GGG..GGG..GGGG..',
         'GGG..GGG..GGGG..',
-        '###MM###MM####MM',
+        '###MM###MM######',
         '################',
         '################',
     ]),

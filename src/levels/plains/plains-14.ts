@@ -27,7 +27,7 @@ export const PLAINS_14: LevelConfig = {
         '################',
         '################',
     ]),
-    villagerSpawn: { position: { x: 7, y: 6 }, interval: 2000, count: 3 },
+    villagerSpawn: { position: { x: 7, y: 4 }, interval: 2000, count: 3 },
     zombieSpawns: [
         { position: { x: 0, y: 6 }, time: 0 },
         { position: { x: 15, y: 6 }, time: 500 },
