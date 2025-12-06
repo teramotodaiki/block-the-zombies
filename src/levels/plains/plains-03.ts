@@ -30,6 +30,6 @@ export const PLAINS_03: LevelConfig = {
     villagerSpawn: { position: { x: 0, y: 6 }, interval: 1000, count: 3 },
     zombieSpawns: [{ position: { x: 12, y: 6 }, time: 100 }],
     goal: { position: { x: 14, y: 5 }, requiredCount: 3 },
-    maxBlocks: 5,
+    maxBlocks: 15,
     forbiddenTiles: [],
 };
