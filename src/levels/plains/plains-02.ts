@@ -14,7 +14,7 @@ export const PLAINS_02: LevelConfig = {
         '**..............',
         '**..............',
         'GGGGGGGGGGGG....',
-        'GGGGGGGGGGG#M#.#', // Bounded Magma (Left #, Right #)
+        'GGGGGGGGGGG#.#.#', // Bounded Magma (Left #, Right #)
         '############M###',
         '################',
         '################',
