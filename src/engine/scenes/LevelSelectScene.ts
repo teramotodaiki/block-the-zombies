@@ -12,10 +12,10 @@ export class LevelSelectScene extends Phaser.Scene {
 
         // Level Grid
         const startX = 200;
-        const startY = 250;
+        const startY = 110;
         const cols = 4;
         const spacingX = 130;
-        const spacingY = 130;
+        const spacingY = 105;
 
         // Ensure LevelManager exists
         let levelManager = this.registry.get('levelManager') as LevelManager;
@@ -56,9 +56,9 @@ export class LevelSelectScene extends Phaser.Scene {
             startLevel: (levelIndex?: number) =>
                 this.scene.start('GameScene', { levelIndex: levelIndex ?? 0 }),
             goToTitle: () => this.scene.start('TitleScene'),
-            restartLevel: () => {},
-            forceGameOver: () => {},
-            forceLevelClear: () => {},
+            restartLevel: () => { },
+            forceGameOver: () => { },
+            forceLevelClear: () => { },
             getCurrentScene: () => 'LevelSelectScene',
         };
     }
