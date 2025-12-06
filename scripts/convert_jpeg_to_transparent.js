@@ -37,9 +37,9 @@ async function processImage() {
 
         // Simple Euclidean distance
         const dist = Math.sqrt(
-            Math.pow(r - bgR, 2) +
-            Math.pow(g - bgG, 2) +
-            Math.pow(b - bgB, 2)
+            (r - bgR) ** 2 +
+            (g - bgG) ** 2 +
+            (b - bgB) ** 2
         );
 
         if (dist < THRESHOLD) {
