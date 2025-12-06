@@ -34,8 +34,12 @@ export class LevelSelectScene extends Phaser.Scene {
             const y = startY + row * spacingY;
 
             const isUnlocked = levelManager.isLevelUnlocked(i);
+            // Check if this is the latest unlocked level
+            // It is latest if it is unlocked AND (it's the last level OR the next one is locked)
+            const isNextLocked = i === levelCount - 1 || !levelManager.isLevelUnlocked(i + 1);
+            const isLatest = isUnlocked && isNextLocked;
 
-            this.createLevelButton(x, y, i + 1, isUnlocked, () => {
+            this.createLevelButton(x, y, i + 1, isUnlocked, isLatest, () => {
                 if (isUnlocked) {
                     this.scene.start('GameScene', { levelIndex: i });
                 }
@@ -64,6 +68,7 @@ export class LevelSelectScene extends Phaser.Scene {
         y: number,
         level: number,
         isUnlocked: boolean,
+        isLatest: boolean,
         onClick: () => void,
     ) {
         const btn = this.add.container(x, y);
@@ -72,6 +77,19 @@ export class LevelSelectScene extends Phaser.Scene {
         const color = isUnlocked ? 0x4caf50 : 0x888888;
         const strokeColor = isUnlocked ? 0x2e7d32 : 0x555555;
         const shadowColor = 0x000000;
+
+        // If latest, add a glowing background behind the button
+        if (isLatest) {
+            const glow = this.add.rectangle(0, 0, 110, 110, 0xffff00, 0.6);
+            btn.add(glow);
+            this.tweens.add({
+                targets: glow,
+                alpha: 0.2,
+                duration: 800,
+                yoyo: true,
+                repeat: -1,
+            });
+        }
 
         const bg = this.add.rectangle(0, 0, 100, 100, color);
         bg.setStrokeStyle(4, strokeColor);
