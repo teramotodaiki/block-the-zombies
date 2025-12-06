@@ -32,6 +32,8 @@
     レベル自動生成を行うときの、プロンプト設計と制約を確認する。
 12. `/docs/testing-strategy.md`
     どこまでテストを書くべきか、何を保証するかを理解する。
+13. `/docs/asset-acquisition-guide.md`
+    効率的なアセット探索・ダウンロード手順（特にMinecraft Wiki）を確認する。
 
 ## 重要な制約（要約）
 

@@ -25,10 +25,10 @@ export class BootScene extends Phaser.Scene {
 
         // Audio (SE)
         this.load.audio('se-click', 'assets/game/se_click.mp3');
-        this.load.audio('se-place', 'assets/game/se_place_block.mp3');
-        this.load.audio('se-destroy', 'assets/game/se_destroy_block.mp3');
-        this.load.audio('se-death', 'assets/game/se_villager_death.mp3');
-        this.load.audio('se-clear', 'assets/game/se_level_clear.mp3');
+        this.load.audio('se-place', 'assets/game/se_place.mp3');
+        this.load.audio('se-destroy', 'assets/game/se_destroy.mp3');
+        this.load.audio('se-death', 'assets/game/se_death.mp3');
+        this.load.audio('se-clear', 'assets/game/se_clear.mp3');
         this.load.audio('se-goal', 'assets/game/se_goal.mp3');
 
         // Tiles
