@@ -1,4 +1,4 @@
-import { type LevelConfig } from '../core/level';
+import type { LevelConfig } from '../core/level';
 import { TileType } from '../core/types';
 
 export function validateLevel(level: LevelConfig): string[] {
