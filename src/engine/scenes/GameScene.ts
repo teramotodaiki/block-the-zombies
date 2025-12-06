@@ -16,8 +16,6 @@ export class GameScene extends Phaser.Scene {
     private hud!: HUD;
     private isGameEnded = false;
 
-    private prevVillagerCount = 0;
-    private prevGoalCount = 0;
     private blockBreakEmitter!: Phaser.GameObjects.Particles.ParticleEmitter;
 
     constructor() {
@@ -26,8 +24,6 @@ export class GameScene extends Phaser.Scene {
 
     create(data: { levelIndex?: number }) {
         this.isGameEnded = false;
-        this.prevVillagerCount = 0;
-        this.prevGoalCount = 0;
 
         // Sky Background
         const width = this.cameras.main.width;
@@ -62,6 +58,27 @@ export class GameScene extends Phaser.Scene {
 
         this.gameCore = new Game(levelManager.getCurrentLevel());
         this.gameRenderer = new Renderer(this, this.gameCore);
+
+        // Handle Game Events
+        this.gameCore.onEntityEvent = (event, entity) => {
+            if (event === 'villager-eaten') {
+                // Zombie eats villager -> Zombie Cry
+                this.sound.play('se-zombie-say');
+                this.createDeathEffect(entity.position.x, entity.position.y);
+            } else if (event === 'zombie-died') {
+                // Zombie falls in Magma -> Zombie Death
+                this.sound.play('se-zombie-death');
+                this.createDeathEffect(entity.position.x, entity.position.y);
+            } else if (event === 'villager-died') {
+                // Villager falls in Magma -> Villager Death (OOF)
+                this.sound.play('se-death');
+                this.createDeathEffect(entity.position.x, entity.position.y);
+            } else if (event === 'villager-goal') {
+                this.sound.play('se-goal', { volume: 0.8 });
+                // Goal effect?
+            }
+        };
+
         new InputManager(this, this.gameCore);
         this.hud = new HUD(this, this.gameCore);
         this.overlayManager = new OverlayManager(this);
@@ -159,7 +176,6 @@ export class GameScene extends Phaser.Scene {
         if (!this.isGameEnded) {
             this.gameCore.update(delta / 1000);
             this.checkGameState();
-            this.checkEntityAudio();
         }
 
         // Render update
@@ -190,23 +206,8 @@ export class GameScene extends Phaser.Scene {
         }
     }
 
-    private checkEntityAudio() {
-        // Check for Goal or Death
-        const currentVillagerCount = this.gameCore.villagers.length;
-        const currentGoalCount = this.gameCore.goalCount;
-
-        if (currentVillagerCount < this.prevVillagerCount) {
-            // Someone was removed
-            if (currentGoalCount > this.prevGoalCount) {
-                // Goal reached
-                this.sound.play('se-goal', { volume: 0.8 });
-            } else {
-                // Died
-                this.sound.play('se-death');
-            }
-        }
-
-        this.prevVillagerCount = currentVillagerCount;
-        this.prevGoalCount = currentGoalCount;
+    private createDeathEffect(x: number, y: number) {
+        this.blockBreakEmitter.explode(15, x, y);
     }
+
 }

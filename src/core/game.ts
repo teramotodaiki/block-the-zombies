@@ -25,6 +25,9 @@ export class Game {
     isLevelCleared: boolean;
     isPaused: boolean;
 
+    // Callbacks for events (audio/effects)
+    public onEntityEvent?: (eventName: string, entity: Entity) => void;
+
     constructor(config: LevelConfig) {
         // Deep copy config to prevent mutation of original level data
         this.levelConfig = JSON.parse(JSON.stringify(config));
@@ -71,6 +74,13 @@ export class Game {
         // Update Entities
         for (const entity of this.entities) {
             entity.update(delta, this.grid);
+            if (entity.isDead && entity.position.y > this.grid.height * TILE_SIZE) {
+                if (entity instanceof Villager) {
+                    this.onEntityEvent?.('villager-died', entity);
+                } else if (entity instanceof Zombie) {
+                    this.onEntityEvent?.('zombie-died', entity);
+                }
+            }
         }
 
         // Check Collisions / Game Rules
@@ -141,10 +151,12 @@ export class Game {
     private checkEntityCollisions() {
         // Zombie vs Villager
         for (const zombie of this.zombies) {
+            if (zombie.isDead) continue;
             for (const villager of this.villagers) {
+                if (villager.isDead) continue;
                 if (this.checkOverlap(zombie, villager)) {
                     villager.isDead = true;
-                    // TODO: Effect?
+                    this.onEntityEvent?.('villager-eaten', villager);
                 }
             }
         }
@@ -157,6 +169,11 @@ export class Game {
             );
             if (this.grid.getTile(gridPos.x, gridPos.y) === TileType.Magma) {
                 entity.isDead = true;
+                if (entity instanceof Zombie) {
+                    this.onEntityEvent?.('zombie-died', entity);
+                } else if (entity instanceof Villager) {
+                    this.onEntityEvent?.('villager-died', entity);
+                }
             }
         }
     }
@@ -196,6 +213,7 @@ export class Game {
             if (hitGoal) {
                 villager.isDead = true; // Reached goal, remove from game
                 this.goalCount++;
+                this.onEntityEvent?.('villager-goal', villager);
             }
         }
 
