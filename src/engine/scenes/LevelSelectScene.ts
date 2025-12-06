@@ -35,9 +35,10 @@ export class LevelSelectScene extends Phaser.Scene {
 
             const isUnlocked = levelManager.isLevelUnlocked(i);
             // Check if this is the latest unlocked level
-            // It is latest if it is unlocked AND (it's the last level OR the next one is locked)
-            const isNextLocked = i === levelCount - 1 || !levelManager.isLevelUnlocked(i + 1);
-            const isLatest = isUnlocked && isNextLocked;
+            // It is latest if it is unlocked AND the next one is NOT unlocked
+            // AND it is NOT the final level (user request: "when all levels unlocked, newest should not glow")
+            const isNextLocked = !levelManager.isLevelUnlocked(i + 1);
+            const isLatest = isUnlocked && isNextLocked && (i < levelCount - 1);
 
             this.createLevelButton(x, y, i + 1, isUnlocked, isLatest, () => {
                 if (isUnlocked) {
@@ -80,14 +81,19 @@ export class LevelSelectScene extends Phaser.Scene {
 
         // If latest, add a glowing background behind the button
         if (isLatest) {
-            const glow = this.add.rectangle(0, 0, 110, 110, 0xffff00, 0.6);
+            // Stronger glow: bigger size, pulsing scale
+            const glow = this.add.rectangle(0, 0, 110, 110, 0xffff00, 1.0);
+            glow.setStrokeStyle(4, 0xffd700);
             btn.add(glow);
+
             this.tweens.add({
                 targets: glow,
-                alpha: 0.2,
+                alpha: { from: 1.0, to: 0.2 },
+                scale: { from: 1.0, to: 1.2 },
                 duration: 800,
                 yoyo: true,
                 repeat: -1,
+                ease: 'Sine.easeInOut'
             });
         }
 
