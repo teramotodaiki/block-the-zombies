@@ -28,7 +28,7 @@ export const PLAINS_05: LevelConfig = {
         '################',
     ]),
     villagerSpawn: { position: { x: 14, y: 1 }, interval: 2000, count: 3 },
-    zombieSpawns: [{ position: { x: 9, y: 6 }, time: 1500 }],
+    zombieSpawns: [{ position: { x: 9, y: 6 }, time: 1500, interval: 5000 }],
     goal: { position: { x: 0, y: 2 }, requiredCount: 3 },
     maxBlocks: 10,
     forbiddenTiles: [],

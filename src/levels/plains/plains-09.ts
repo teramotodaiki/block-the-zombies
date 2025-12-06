@@ -1,13 +1,5 @@
 import { type LevelConfig, parseLevelGrid } from '../../core/level';
 
-/**
- * Level 9: 迷路の出口 (Maze Exit)
- * テーマ: 複雑な地形での誘導
- * 意図:
- * - 複数の段差と壁がある迷路状の地形。
- * - 村人を正しいルートに誘導するためにブロックを配置する。
- * - 間違った方向に行くとマグマに落ちる危険がある。
- */
 export const PLAINS_09: LevelConfig = {
     id: 'plains-09',
     biome: 'plains',
@@ -16,20 +8,30 @@ export const PLAINS_09: LevelConfig = {
     tiles: parseLevelGrid([
         '................',
         '................',
-        '**..........GG..',
-        '**..........GG..',
-        'GG..........GG..',
-        'GG....GG....GG..',
-        '......GG....GG..',
-        '......GG........',
-        '......GG........',
-        '......##........',
-        '#MMMM###MMMMMM##',
+        '................',
+        '................',
+        '................',
+        '**..............', // y=5. x=0,1.
+        '**..............', // y=6.
+        'GG...G...G...G..', // y=7.
+        'GG...G...G...G..',
+        '##M##M###M###M##', // y=9.
+        '################',
         '################',
     ]),
-    villagerSpawn: { position: { x: 14, y: 1 }, interval: 2500, count: 3 },
-    zombieSpawns: [],
-    goal: { position: { x: 0, y: 2 }, requiredCount: 3 },
-    maxBlocks: 8,
+    villagerSpawn: { position: { x: 2, y: 6 }, interval: 4000, count: 3 }, // y=6 is air above y=7(. empty).
+    // Wait. y=7 x=2 is . (Empty). hole.
+    // Villager falls immediately?
+    // Map: GG...G...
+    // x=2 is hole between GG(0,1) and G(5).
+    // Tiles check: 'GG...G'.
+    // Indices: 0,1=G. 2,3,4=. 5=G.
+    // Spawn at 2. Falls to 9 (Magma).
+    // Intention: Drop onto recycled bridge?
+    // Validator: Spawn inside solid?
+    // x=2, y=6 is empty. OK.
+    zombieSpawns: [{ position: { x: 14, y: 6 }, time: 5000, interval: 6000 }],
+    goal: { position: { x: 0, y: 5 }, requiredCount: 3 }, // x=0, y=5.
+    maxBlocks: 3,
     forbiddenTiles: [],
 };

@@ -9,6 +9,7 @@ export interface SpawnPoint {
 export interface ZombieSpawn {
     position: Vector2; // Grid coordinates
     time: number; // ms from start
+    interval?: number; // ms, if periodic
 }
 
 export interface LevelConfig {

@@ -1,13 +1,5 @@
 import { type LevelConfig, parseLevelGrid } from '../../core/level';
 
-/**
- * Level 7: 二方向からの脅威 (Dual Threat)
- * テーマ: 複数のゾンビへの対処
- * 意図:
- * - 左右両方からゾンビが接近してくる。
- * - 村人を中央のゴールに導きつつ、両側のゾンビを隔離する必要がある。
- * - 限られたブロックで効率的に壁を作る判断力が求められる。
- */
 export const PLAINS_07: LevelConfig = {
     id: 'plains-07',
     biome: 'plains',
@@ -17,22 +9,19 @@ export const PLAINS_07: LevelConfig = {
         '................',
         '................',
         '................',
-        '................',
-        '................',
-        '.......**.......',
-        '.......**.......',
-        'GGGGGGGGGGGGGGGG',
-        'GGGGGGGGGGGGGGGG',
-        '################',
-        '################',
+        '..............**', // y=3
+        '..............**', // y=4. Goal at (14,3)-(15,4)
+        '...........GGG..',
+        '...........GGG..',
+        '........GGG.....',
+        '........GGG.....',
+        '.....GGG........',
+        '..GGG...........', // y=10. x=2 is G.
         '################',
     ]),
-    villagerSpawn: { position: { x: 7, y: 6 }, interval: 2000, count: 3 },
-    zombieSpawns: [
-        { position: { x: 0, y: 6 }, time: 500 },
-        { position: { x: 15, y: 6 }, time: 1000 },
-    ],
-    goal: { position: { x: 7, y: 5 }, requiredCount: 3 },
-    maxBlocks: 6,
+    villagerSpawn: { position: { x: 2, y: 9 }, interval: 3000, count: 3 }, // y=9 is air above y=10(G). Correct.
+    zombieSpawns: [{ position: { x: 13, y: 4 }, time: 1000, interval: 4000 }],
+    goal: { position: { x: 14, y: 3 }, requiredCount: 3 },
+    maxBlocks: 10,
     forbiddenTiles: [],
 };

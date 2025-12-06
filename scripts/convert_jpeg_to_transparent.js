@@ -1,13 +1,10 @@
+
 import fs from 'node:fs';
 import path from 'node:path';
 import sharp from 'sharp';
 
-const INPUT_FILE = process.argv[2]
-    ? path.resolve(process.argv[2])
-    : path.join(process.cwd(), 'workbench/goal_source.png');
-const OUTPUT_FILE = process.argv[3]
-    ? path.resolve(process.argv[3])
-    : path.join(process.cwd(), 'public/assets/game/goal_sheet.png');
+const INPUT_FILE = process.argv[2] ? path.resolve(process.argv[2]) : path.join(process.cwd(), 'workbench/goal_source.png');
+const OUTPUT_FILE = process.argv[3] ? path.resolve(process.argv[3]) : path.join(process.cwd(), 'public/assets/game/goal_sheet.png');
 const THRESHOLD = 60; // Reset threshold just in case
 
 async function processImage() {
@@ -40,7 +37,9 @@ async function processImage() {
 
         // Simple Euclidean distance
         const dist = Math.sqrt(
-            (r - bgR) ** 2 + (g - bgG) ** 2 + (b - bgB) ** 2,
+            (r - bgR) ** 2 +
+            (g - bgG) ** 2 +
+            (b - bgB) ** 2
         );
 
         if (dist < THRESHOLD) {
@@ -56,8 +55,8 @@ async function processImage() {
         raw: {
             width: info.width,
             height: info.height,
-            channels: 4,
-        },
+            channels: 4
+        }
     })
         .trim() // Auto-crop transparent pixels
         // Resize if too big (optional, but requested for asset usage)

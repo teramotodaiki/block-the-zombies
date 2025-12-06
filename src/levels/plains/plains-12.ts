@@ -1,13 +1,5 @@
 import { type LevelConfig, parseLevelGrid } from '../../core/level';
 
-/**
- * Level 12: 時間との戦い (Race Against Time)
- * テーマ: スピードと判断
- * 意図:
- * - 村人の出現間隔が短く、素早い判断が求められる。
- * - ゾンビも複数出現し、同時に対処する必要がある。
- * - これまでの技術を素早く実行する総合力が試される。
- */
 export const PLAINS_12: LevelConfig = {
     id: 'plains-12',
     biome: 'plains',
@@ -16,23 +8,23 @@ export const PLAINS_12: LevelConfig = {
     tiles: parseLevelGrid([
         '................',
         '................',
+        '..............**',
+        '..............**',
+        'GG......GG....GG', // y=4.
+        'GG......GG....##',
+        '##M#####MM####M#', // y=6. Bounded.
+        '################',
         '................',
-        '................',
-        '**..............',
-        '**..............',
-        'GGG...GGGG...GGG',
-        'GGG...GGGG...GGG',
-        '###...####...###',
-        '###MMM####MMM###',
+        '#M############M#', // y=9. Bounded.
         '################',
         '################',
     ]),
-    villagerSpawn: { position: { x: 0, y: 5 }, interval: 1500, count: 3 },
+    villagerSpawn: { position: { x: 0, y: 3 }, interval: 3000, count: 3 }, // y=3 is air above y=4(G). Correct.
     zombieSpawns: [
-        { position: { x: 15, y: 5 }, time: 0 },
-        { position: { x: 8, y: 5 }, time: 2000 },
+        { position: { x: 8, y: 3 }, time: 2000, interval: 4000 },
+        { position: { x: 15, y: 3 }, time: 5000, interval: 3000 }
     ],
-    goal: { position: { x: 0, y: 4 }, requiredCount: 3 },
-    maxBlocks: 10,
+    goal: { position: { x: 14, y: 2 }, requiredCount: 3 },
+    maxBlocks: 25,
     forbiddenTiles: [],
 };
