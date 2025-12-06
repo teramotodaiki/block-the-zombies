@@ -81,9 +81,9 @@ export class TitleScene extends Phaser.Scene {
             startLevel: (levelIndex?: number) =>
                 this.scene.start('GameScene', { levelIndex: levelIndex ?? 0 }),
             goToTitle: () => this.scene.start('TitleScene'),
-            restartLevel: () => { },
-            forceGameOver: () => { },
-            forceLevelClear: () => { },
+            restartLevel: () => {},
+            forceGameOver: () => {},
+            forceLevelClear: () => {},
             getCurrentScene: () => 'TitleScene',
         };
     }

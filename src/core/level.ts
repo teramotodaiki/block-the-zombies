@@ -58,7 +58,9 @@ export function parseLevelGrid(grid: string[]): TileType[][] {
                     break;
                 default:
                     // Strict mode: throw error on unknown character
-                    throw new Error(`Invalid character '${char}' in level grid at row ${y}, col ${x}`);
+                    throw new Error(
+                        `Invalid character '${char}' in level grid at row ${y}, col ${x}`,
+                    );
             }
         }
         tiles.push(row);

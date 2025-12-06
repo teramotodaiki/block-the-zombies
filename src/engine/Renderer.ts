@@ -73,7 +73,11 @@ export class Renderer {
                             const centerY = y * TILE_SIZE + TILE_SIZE;
 
                             // Use Sprite instead of Image
-                            this.goalSprite = this.scene.add.sprite(centerX, centerY, 'tile-goal');
+                            this.goalSprite = this.scene.add.sprite(
+                                centerX,
+                                centerY,
+                                'tile-goal',
+                            );
                             this.goalSprite.setOrigin(0.5, 0.47); // Anchor bottom-ish
                             this.goalSprite.setDisplaySize(120, 90);
                             this.tileGroup.add(this.goalSprite);
@@ -206,7 +210,7 @@ export class Renderer {
                     duration: 500,
                     onComplete: () => {
                         sprite.destroy();
-                    }
+                    },
                 });
             }
         }

@@ -37,10 +37,14 @@ export class BootScene extends Phaser.Scene {
         this.load.image('tile-ground', 'assets/game/tile_ground.png');
         this.load.image('tile-bedrock', 'assets/game/tile_bedrock.png');
         // this.load.image('tile-magma', 'assets/game/tile_magma.png'); // Replaced by anim
-        this.load.spritesheet('tile-magma-anim', 'assets/game/tile_magma_anim.png', {
-            frameWidth: 32,
-            frameHeight: 32,
-        });
+        this.load.spritesheet(
+            'tile-magma-anim',
+            'assets/game/tile_magma_anim.png',
+            {
+                frameWidth: 32,
+                frameHeight: 32,
+            },
+        );
         this.load.spritesheet('tile-goal', 'assets/game/goal_sheet.png', {
             frameWidth: 425,
             frameHeight: 325,
@@ -118,7 +122,13 @@ export class BootScene extends Phaser.Scene {
             // Shackle
             g.lineStyle(4, 0x808080);
             g.beginPath();
-            g.arc(32, 24, 10, Phaser.Math.DegToRad(180), Phaser.Math.DegToRad(0));
+            g.arc(
+                32,
+                24,
+                10,
+                Phaser.Math.DegToRad(180),
+                Phaser.Math.DegToRad(0),
+            );
             g.strokePath();
             g.generateTexture('icon-lock', 64, 64);
             g.destroy();
@@ -135,7 +145,13 @@ export class BootScene extends Phaser.Scene {
             g.beginPath();
             g.moveTo(22, 24);
             g.lineTo(22, 14);
-            g.arc(32, 14, 10, Phaser.Math.DegToRad(180), Phaser.Math.DegToRad(0));
+            g.arc(
+                32,
+                14,
+                10,
+                Phaser.Math.DegToRad(180),
+                Phaser.Math.DegToRad(0),
+            );
             g.strokePath();
             g.generateTexture('icon-unlock', 64, 64);
             g.destroy();

@@ -1,13 +1,13 @@
 import Phaser from 'phaser';
+import { TILE_SIZE } from '../../core/constants';
 import { Game } from '../../core/game';
-import { LEVELS } from '../../levels';
 import { LevelManager } from '../../core/level-manager';
+import { TileType } from '../../core/types';
+import { LEVELS } from '../../levels';
 import { HUD } from '../../ui/HUD';
 import { OverlayManager } from '../../ui/OverlayManager';
 import { InputManager } from '../InputManager';
 import { Renderer } from '../Renderer';
-import { TileType } from '../../core/types';
-import { TILE_SIZE } from '../../core/constants';
 
 export class GameScene extends Phaser.Scene {
     private gameCore!: Game;
@@ -29,7 +29,7 @@ export class GameScene extends Phaser.Scene {
         const width = this.cameras.main.width;
         const height = this.cameras.main.height;
         const sky = this.add.graphics();
-        sky.fillGradientStyle(0x4A90E2, 0x4A90E2, 0x87CEEB, 0x87CEEB, 1);
+        sky.fillGradientStyle(0x4a90e2, 0x4a90e2, 0x87ceeb, 0x87ceeb, 1);
         sky.fillRect(0, 0, width, height);
         sky.setScrollFactor(0);
         sky.setDepth(-100); // Behind everything
@@ -142,7 +142,7 @@ export class GameScene extends Phaser.Scene {
             lifespan: 500,
             gravityY: 300,
             scale: { start: 1, end: 0 },
-            emitting: false
+            emitting: false,
         });
 
         // Expose Debug API
@@ -193,7 +193,9 @@ export class GameScene extends Phaser.Scene {
             this.isGameEnded = true;
             this.sound.play('se-clear');
             this.overlayManager.showLevelClear(() => {
-                const levelManager = this.registry.get('levelManager') as LevelManager;
+                const levelManager = this.registry.get(
+                    'levelManager',
+                ) as LevelManager;
                 const nextIndex = levelManager.getCurrentLevelIndex() + 1;
 
                 // Unlock next level if it exists
@@ -209,5 +211,4 @@ export class GameScene extends Phaser.Scene {
     private createDeathEffect(x: number, y: number) {
         this.blockBreakEmitter.explode(15, x, y);
     }
-
 }

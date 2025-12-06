@@ -11,6 +11,10 @@ import { PLAINS_09 } from './plains/plains-09';
 import { PLAINS_10 } from './plains/plains-10';
 import { PLAINS_11 } from './plains/plains-11';
 import { PLAINS_12 } from './plains/plains-12';
+import { PLAINS_13 } from './plains/plains-13';
+import { PLAINS_14 } from './plains/plains-14';
+import { PLAINS_15 } from './plains/plains-15';
+import { PLAINS_16 } from './plains/plains-16';
 
 export const LEVELS: LevelConfig[] = [
     PLAINS_01,
@@ -25,4 +29,8 @@ export const LEVELS: LevelConfig[] = [
     PLAINS_10,
     PLAINS_11,
     PLAINS_12,
+    PLAINS_13,
+    PLAINS_14,
+    PLAINS_15,
+    PLAINS_16,
 ];
