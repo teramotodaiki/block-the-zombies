@@ -76,8 +76,11 @@ export abstract class Entity {
                     (this.position.y + this.height / 2 - 0.1) / TILE_SIZE,
                 );
 
-                // If the wall we hit is at foot level
-                if (wallTileY === footTileY) {
+                // If the wall we hit is at foot level OR just above foot level (handling float imprecision)
+                // When standing on a tile, footTileY might be that tile index (if slightly sunk).
+                // The step to climb is the tile ABOVE the one we are standing on.
+                // So if footTileY is floor (e.g. 10), and step is 9. We want to climb 9.
+                if (wallTileY === footTileY || wallTileY === footTileY - 1) {
                     // Check tile above the wall
                     // Also check tile above our head (to ensure we don't bump head when climbing)
                     // Actually, we just need to check if (wallTileX, wallTileY - 1) is not solid.
